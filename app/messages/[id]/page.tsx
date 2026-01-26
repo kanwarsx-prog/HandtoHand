@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import ChatWindow from '@/components/ChatWindow';
 
-export default async function ChatPage({ params }: { params: { id: string } }) {
+export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
     const cookieStore = await cookies();
     const { id } = await params;
 
@@ -65,7 +65,7 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
         .eq('conversation_id', id)
         .neq('user_id', user.id);
 
-    const otherUser = otherParticipants?.[0]?.users;
+    const otherUser = otherParticipants?.[0]?.users as { display_name: string; id: string } | undefined;
 
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
