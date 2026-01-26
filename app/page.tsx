@@ -43,61 +43,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-indigo-600 flex items-center gap-2">
-                <span>🤝</span> HandtoHand
-              </Link>
-            </div>
 
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <Link
-                    href="/matches"
-                    className="px-4 py-2 text-gray-700 hover:text-indigo-600 text-sm font-medium transition-colors flex items-center gap-1"
-                  >
-                    🎯 Matches
-                  </Link>
-                  <Link
-                    href="/messages"
-                    className="px-4 py-2 text-gray-700 hover:text-indigo-600 text-sm font-medium transition-colors flex items-center gap-1"
-                  >
-                    💬 Messages
-                  </Link>
-                  <Link
-                    href="/profile"
-                    className="px-4 py-2 text-gray-700 hover:text-indigo-600 text-sm font-medium transition-colors"
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    href="/wishes/create"
-                    className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors shadow-sm"
-                  >
-                    + Post Wish
-                  </Link>
-                  <Link
-                    href="/offers/create"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
-                  >
-                    + Post Offer
-                  </Link>
-                  <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium">
-                    {user.email?.[0].toUpperCase()}
-                  </div>
-                </>
-              ) : (
-                <Link href="/auth/login" className="text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Sign in
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section - Show only for non-logged in users */}
       {!user ? (
