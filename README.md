@@ -1,109 +1,36 @@
-# HandtoHand - Local Exchange MVP
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A money-free local exchange platform built with Supabase and Vercel.
+## Getting Started
 
-## Project Structure
-
-```
-HandtoHand/
-├── web/                    # Next.js web app
-├── mobile/                 # Expo React Native app
-├── packages/
-│   ├── database/          # Prisma schema & migrations
-│   ├── shared/            # Shared types & utilities
-│   └── api-client/        # API client library
-├── supabase/              # Supabase config & migrations
-└── docs/                  # Documentation
-```
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 20+
-- Supabase account (free tier)
-
-### Setup (10 minutes)
-
-**See [QUICK_SETUP.md](./QUICK_SETUP.md) for detailed instructions.**
-
-Quick version:
-
-1. **Create Supabase project** at [supabase.com](https://supabase.com)
-
-2. **Set up environment variables**
-   ```powershell
-   # Copy your Supabase URL and keys to:
-   # - web/.env.local
-   # - mobile/.env
-   ```
-
-3. **Enable PostGIS** (run in Supabase SQL Editor)
-   ```sql
-   CREATE EXTENSION IF NOT EXISTS postgis;
-   CREATE EXTENSION IF NOT EXISTS pg_trgm;
-   ```
-
-4. **Push database schema**
-   ```powershell
-   cd packages\database
-   npm install
-   npm run db:push
-   ```
-
-5. **Start development**
-   ```powershell
-   npm run dev:web     # Terminal 1
-   npm run dev:mobile  # Terminal 2
-   ```
-
-### Alternative: Local Supabase
-
-If you prefer local development with Docker, see [GETTING_STARTED.md](./GETTING_STARTED.md).
-
-## Documentation
-
-- **[Quick Setup](./QUICK_SETUP.md)** - Get running in 10 minutes (cloud Supabase)
-- **[Getting Started](./GETTING_STARTED.md)** - Local development with Docker
-- **[Project Summary](./PROJECT_SUMMARY.md)** - What's been built
-- [Technical Design](./TECHNICAL_DESIGN.md) - Complete architecture
-- [Supabase & Vercel Setup](./SUPABASE_VERCEL_SETUP.md) - Production deployment
-- [Product Design](./local_exchange_mvp_product_design_phase_1.md) - Product requirements
-
-## Tech Stack
-
-- **Frontend**: Next.js 14 (web), Expo (mobile)
-- **Backend**: Vercel Serverless Functions
-- **Database**: Supabase (PostgreSQL + PostGIS)
-- **Auth**: Supabase Auth
-- **Storage**: Supabase Storage
-- **Cache**: Upstash Redis
-- **Email**: Resend
-
-## Development
+First, run the development server:
 
 ```bash
-# Run linting
-npm run lint
-
-# Run type checking
-npm run type-check
-
-# Run tests
-npm run test
-
-# Open Prisma Studio
-npm run db:studio
-
-# View Supabase Studio
-npm run supabase:status
-# Then open the Studio URL
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Deployment
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-See [SUPABASE_VERCEL_SETUP.md](./SUPABASE_VERCEL_SETUP.md) for deployment instructions.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## License
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Private - All Rights Reserved
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
