@@ -4,7 +4,7 @@ import Link from 'next/link';
 import DeleteOfferButton from '@/components/DeleteOfferButton';
 import MessageButton from '@/components/MessageButton';
 
-export default async function OfferDetailsPage({ params }: { params: { id: string } }) {
+export default async function OfferDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const cookieStore = await cookies();
     const { id } = await params;
 
@@ -21,6 +21,35 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
     );
 
     const { data: { user } } = await supabase.auth.getUser();
+
+    // Redirect non-logged-in users to login
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
+                    <div className="text-6xl mb-4">🔒</div>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign in Required</h1>
+                    <p className="text-gray-600 mb-6">
+                        Please sign in to view offer details and connect with neighbors.
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                        <Link
+                            href="/auth/login"
+                            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-bold"
+                        >
+                            Sign In
+                        </Link>
+                        <Link
+                            href="/"
+                            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-bold"
+                        >
+                            Back to Home
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const { data: offer, error } = await supabase
         .from('offers')
