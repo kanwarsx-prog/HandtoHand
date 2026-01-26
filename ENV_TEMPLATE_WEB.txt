@@ -1,0 +1,24 @@
+# ============================================
+# WEB APP ENVIRONMENT CONFIGURATION
+# ============================================
+# Copy this file to web/.env.local and update the DATABASE_URL password
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://vezbnfgtjpadksammaw.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlemJuZmd0anBhZGtzYW1tbmF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0NDAzNTgsImV4cCI6MjA4NTAxNjM1OH0.XesMCQJwX7CiB5l6UL4cqwljtVEC0QIgBwSkpoemW-4
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlemJuZmd0anBhZGtzYW1tbmF3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTQ0MDM1OCwiZXhwIjoyMDg1MDE2MzU4fQ.ir3AGAoS3-hzBZoiZzPvk8C26rAYTD4T_v1pyUtvGnk
+
+# Database Connection
+# IMPORTANT: Replace [YOUR-PASSWORD] with your actual database password
+# Get from: Supabase Dashboard → Project Settings → Database → Connection string (URI)
+DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.vezbnfgtjpadksammaw.supabase.co:5432/postgres"
+DIRECT_URL="postgresql://postgres:[YOUR-PASSWORD]@db.vezbnfgtjpadksammaw.supabase.co:5432/postgres"
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+
+# Optional (can add later)
+# UPSTASH_REDIS_REST_URL=
+# UPSTASH_REDIS_REST_TOKEN=
+# RESEND_API_KEY=

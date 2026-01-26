@@ -1,0 +1,387 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  extensions = [postgis, pg_trgm]
+}
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                String      @id @default(uuid())  // Matches Supabase auth.users.id
+  email             String      @unique
+  displayName       String      @map("display_name")
+  profilePhoto      String?     @map("profile_photo")
+  postcodeOutward   String      @map("postcode_outward")
+  postcodeFull      String?     @map("postcode_full")
+  bio               String?     @db.Text
+  
+  // Location stored as PostGIS geography point
+  locationLat       Float?      @map("location_lat")
+  locationLng       Float?      @map("location_lng")
+  
+  // Privacy
+  showFullPostcode  Boolean     @default(false) @map("show_full_postcode")
+  
+  // Status
+  status            UserStatus  @default(ACTIVE)
+  deletedAt         DateTime?   @map("deleted_at")
+  
+  // Metadata
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  lastActiveAt      DateTime    @default(now()) @map("last_active_at")
+  
+  // Relations
+  offers            Offer[]
+  wishes            Wish[]
+  messagesSent      Message[]   @relation("SentMessages")
+  conversations     ConversationParticipant[]
+  exchangesInitiated Exchange[] @relation("ExchangeInitiator")
+  exchangesResponded Exchange[] @relation("ExchangeResponder")
+  blockedUsers      Block[]     @relation("Blocker")
+  blockedBy         Block[]     @relation("Blocked")
+  reports           Report[]
+  feedbackGiven     Feedback[]  @relation("FeedbackGiven")
+  feedbackReceived  Feedback[]  @relation("FeedbackReceived")
+  categories        UserCategory[]
+  
+  @@index([email])
+  @@index([status])
+  @@index([postcodeOutward])
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  DELETED
+}
+
+// ============================================================================
+// CATEGORIES
+// ============================================================================
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  icon        String?
+  order       Int       @default(0)
+  
+  offers      Offer[]
+  wishes      Wish[]
+  users       UserCategory[]
+  
+  @@index([slug])
+  @@map("categories")
+}
+
+model UserCategory {
+  userId     String   @map("user_id")
+  categoryId String   @map("category_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  @@id([userId, categoryId])
+  @@map("user_categories")
+}
+
+// ============================================================================
+// OFFERS & WISHES
+// ============================================================================
+
+model Offer {
+  id              String        @id @default(uuid())
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title           String
+  description     String        @db.Text
+  categoryId      String        @map("category_id")
+  category        Category      @relation(fields: [categoryId], references: [id])
+  
+  // Media
+  photos          OfferPhoto[]
+  
+  // Availability
+  availability    String?       @db.Text
+  
+  // Location
+  locationRadius  Int           @default(5) @map("location_radius") // km
+  locationLat     Float?        @map("location_lat")
+  locationLng     Float?        @map("location_lng")
+  
+  // Status
+  status          OfferStatus   @default(ACTIVE)
+  
+  // Metadata
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  viewCount       Int           @default(0) @map("view_count")
+  
+  @@index([userId, status])
+  @@index([categoryId, status])
+  @@index([status, updatedAt])
+  @@index([locationLat, locationLng])
+  @@map("offers")
+}
+
+enum OfferStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+  REMOVED
+}
+
+model OfferPhoto {
+  id        String   @id @default(uuid())
+  offerId   String   @map("offer_id")
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@index([offerId, order])
+  @@map("offer_photos")
+}
+
+model Wish {
+  id                  String      @id @default(uuid())
+  userId              String      @map("user_id")
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title               String
+  description         String      @db.Text
+  categoryId          String?     @map("category_id")
+  category            Category?   @relation(fields: [categoryId], references: [id])
+  
+  openToSuggestions   Boolean     @default(true) @map("open_to_suggestions")
+  
+  status              WishStatus  @default(ACTIVE)
+  
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  
+  @@index([userId, status])
+  @@index([categoryId, status])
+  @@map("wishes")
+}
+
+enum WishStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+// ============================================================================
+// MESSAGING
+// ============================================================================
+
+model Conversation {
+  id            String                    @id @default(uuid())
+  
+  // Context
+  offerId       String?                   @map("offer_id")
+  
+  createdAt     DateTime                  @default(now()) @map("created_at")
+  updatedAt     DateTime                  @updatedAt @map("updated_at")
+  
+  participants  ConversationParticipant[]
+  messages      Message[]
+  
+  @@index([offerId])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId  String       @map("conversation_id")
+  userId          String       @map("user_id")
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  lastReadAt      DateTime     @default(now()) @map("last_read_at")
+  joinedAt        DateTime     @default(now()) @map("joined_at")
+  
+  @@id([conversationId, userId])
+  @@index([userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id              String        @id @default(uuid())
+  conversationId  String        @map("conversation_id")
+  conversation    Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  senderId        String        @map("sender_id")
+  sender          User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  
+  content         String        @db.Text
+  
+  // Metadata
+  createdAt       DateTime      @default(now()) @map("created_at")
+  editedAt        DateTime?     @map("edited_at")
+  
+  // Moderation
+  flagged         Boolean       @default(false)
+  flagReason      String?       @map("flag_reason")
+  
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@map("messages")
+}
+
+// ============================================================================
+// EXCHANGES
+// ============================================================================
+
+model Exchange {
+  id              String          @id @default(uuid())
+  
+  // Participants
+  initiatorId     String          @map("initiator_id")
+  initiator       User            @relation("ExchangeInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  responderId     String          @map("responder_id")
+  responder       User            @relation("ExchangeResponder", fields: [responderId], references: [id], onDelete: Cascade)
+  
+  // What's being exchanged
+  initiatorOffer  String?         @db.Text @map("initiator_offer")
+  responderOffer  String?         @db.Text @map("responder_offer")
+  initiatorOfferId String?        @map("initiator_offer_id")
+  responderOfferId String?        @map("responder_offer_id")
+  
+  // Lifecycle
+  status          ExchangeStatus  @default(PROPOSED)
+  
+  proposedAt      DateTime        @default(now()) @map("proposed_at")
+  agreedAt        DateTime?       @map("agreed_at")
+  completedAt     DateTime?       @map("completed_at")
+  
+  // Completion confirmation
+  initiatorConfirmed Boolean      @default(false) @map("initiator_confirmed")
+  responderConfirmed Boolean      @default(false) @map("responder_confirmed")
+  
+  // Relations
+  feedback        Feedback[]
+  
+  @@index([initiatorId, status])
+  @@index([responderId, status])
+  @@index([status, completedAt])
+  @@map("exchanges")
+}
+
+enum ExchangeStatus {
+  PROPOSED
+  AGREED
+  COMPLETED
+  CANCELLED
+}
+
+// ============================================================================
+// FEEDBACK & TRUST
+// ============================================================================
+
+model Feedback {
+  id              String    @id @default(uuid())
+  exchangeId      String    @map("exchange_id")
+  exchange        Exchange  @relation(fields: [exchangeId], references: [id], onDelete: Cascade)
+  
+  fromUserId      String    @map("from_user_id")
+  fromUser        User      @relation("FeedbackGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUserId        String    @map("to_user_id")
+  toUser          User      @relation("FeedbackReceived", fields: [toUserId], references: [id], onDelete: Cascade)
+  
+  wouldExchangeAgain Boolean @map("would_exchange_again")
+  comment         String?   @db.Text
+  
+  createdAt       DateTime  @default(now()) @map("created_at")
+  
+  @@unique([exchangeId, fromUserId])
+  @@index([toUserId])
+  @@map("feedback")
+}
+
+// ============================================================================
+// SAFETY & MODERATION
+// ============================================================================
+
+model Block {
+  id          String    @id @default(uuid())
+  blockerId   String    @map("blocker_id")
+  blocker     User      @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId   String    @map("blocked_id")
+  blocked     User      @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+  @@map("blocks")
+}
+
+model Report {
+  id            String      @id @default(uuid())
+  reporterId    String      @map("reporter_id")
+  reporter      User        @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  
+  // What's being reported
+  targetType    ReportTarget @map("target_type")
+  targetId      String      @map("target_id")
+  
+  reason        String
+  details       String?     @db.Text
+  
+  // Moderation
+  status        ReportStatus @default(PENDING)
+  reviewedBy    String?     @map("reviewed_by")
+  reviewedAt    DateTime?   @map("reviewed_at")
+  resolution    String?     @db.Text
+  
+  createdAt     DateTime    @default(now()) @map("created_at")
+  
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@map("reports")
+}
+
+enum ReportTarget {
+  USER
+  OFFER
+  MESSAGE
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+// ============================================================================
+// ANALYTICS
+// ============================================================================
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  eventType String   @map("event_type")
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@index([eventType, createdAt])
+  @@index([userId, createdAt])
+  @@map("analytics_events")
+}

@@ -1,0 +1,11 @@
+# ============================================
+# MOBILE APP ENVIRONMENT CONFIGURATION
+# ============================================
+# Copy this file to mobile/.env
+
+# Supabase
+EXPO_PUBLIC_SUPABASE_URL=https://vezbnfgtjpadksammaw.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlemJuZmd0anBhZGtzYW1tbmF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0NDAzNTgsImV4cCI6MjA4NTAxNjM1OH0.XesMCQJwX7CiB5l6UL4cqwljtVEC0QIgBwSkpoemW-4
+
+# App Configuration
+EXPO_PUBLIC_APP_URL=http://localhost:3000
