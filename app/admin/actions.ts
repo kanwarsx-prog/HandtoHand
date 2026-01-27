@@ -154,3 +154,28 @@ export async function deleteOffer(offerId: string, reportId?: string) {
         return { error: error.message };
     }
 }
+
+// Action: Unban User
+export async function unbanUser(userId: string) {
+    try {
+        const { supabase } = await getSupabaseAdmin();
+
+        const adminClient = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!,
+            { cookies: { getAll: () => [], setAll: () => { } } }
+        );
+
+        // 1. Update user status
+        const { error: userError } = await adminClient
+            .from('users')
+            .update({ status: 'ACTIVE' })
+            .eq('id', userId);
+
+        if (userError) throw userError;
+
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
