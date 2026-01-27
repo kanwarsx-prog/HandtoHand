@@ -91,18 +91,18 @@ export default async function Home({
     <div className="min-h-screen bg-stone-50 overflow-x-hidden relative">
 
       {/* Organic Background Blobs */}
-      <div className="absolute top-0 left-0 w-full h-[600px] -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-teal-200/40 rounded-full blur-[100px] mix-blend-multiply animate-fade-in delay-100"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-rose-200/40 rounded-full blur-[120px] mix-blend-multiply animate-fade-in delay-200"></div>
-        <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-100/50 rounded-full blur-[100px] mix-blend-multiply animate-fade-in delay-300"></div>
+      <div className="absolute top-0 left-0 w-full h-[800px] -z-10 overflow-hidden pointer-events-none opacity-60">
+        <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-violet-300/30 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-fuchsia-300/30 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-300/30 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-4000"></div>
       </div>
 
       {/* Hero Section */}
       <div className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center md:text-left relative z-10">
         {!user ? (
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-slate-900 tracking-tight animate-slide-up">
-              Share more.<br /> <span className="text-teal-600">Waste less.</span>
+            <h1 className="text-5xl md:text-7xl font-display font-bold text-slate-900 tracking-tight animate-slide-up leading-tight">
+              Share more.<br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-500">Waste less.</span>
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto animate-slide-up delay-100">
               Connect with your local community to swap skills, tools, and leftovers. No money, just kindness.
@@ -111,8 +111,8 @@ export default async function Home({
         ) : (
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 animate-slide-up">
             <div>
-              <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800">
-                Hello, <span className="text-teal-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! 👋
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800 leading-tight">
+                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! 👋
               </h1>
               <p className="text-lg text-slate-600 mt-2">
                 Here's what your community is sharing today.
@@ -128,7 +128,7 @@ export default async function Home({
 
         {/* Search floating over content */}
         <div className="-mt-4 mb-12 relative z-20">
-          <Suspense fallback={<div className="h-20 bg-white/50 backdrop-blur rounded-2xl animate-pulse"></div>}>
+          <Suspense fallback={<div className="h-20 bg-white/50 backdrop-blur rounded-2xl animate-pulse shadow-sm"></div>}>
             <SearchFilters />
           </Suspense>
         </div>
@@ -137,7 +137,7 @@ export default async function Home({
         {user && !search && !categoryId && recommendedOffers.length > 0 && (
           <div className="mb-16 animate-slide-up delay-200">
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-xl shadow-inner">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 flex items-center justify-center text-xl shadow-sm border border-white">
                 ✨
               </div>
               <h2 className="text-2xl font-display font-bold text-slate-800">Suggested for you</h2>
@@ -171,7 +171,7 @@ export default async function Home({
           </div>
         ) : (
           <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-dashed border-slate-300 animate-slide-up">
-            <div className="text-6xl mb-6 opacity-80">🍃</div>
+            <div className="text-6xl mb-6 opacity-80 animate-bounce">🍃</div>
             <h3 className="text-2xl font-display font-bold text-slate-800 mb-2">No offers found</h3>
             <p className="text-slate-500 mb-8 max-w-md mx-auto">
               We couldn't find anything matching your search. Why not be the first to post something?
@@ -179,13 +179,13 @@ export default async function Home({
             <div className="flex justify-center gap-4">
               <Link
                 href="/"
-                className="px-6 py-2.5 rounded-full bg-slate-100 text-slate-600 font-medium hover:bg-slate-200 transition-colors"
+                className="px-6 py-2.5 rounded-full bg-white text-slate-600 font-bold hover:bg-slate-50 transition-colors shadow-sm border border-slate-200"
               >
                 Clear Search
               </Link>
               <Link
                 href="/offers/create"
-                className="px-6 py-2.5 rounded-full bg-teal-500 text-white font-bold hover:bg-teal-600 shadow-lg shadow-teal-500/30 transition-all hover:shadow-teal-500/50 hover:-translate-y-0.5"
+                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold hover:shadow-lg hover:shadow-violet-500/30 transition-all hover:-translate-y-0.5"
               >
                 Post an Offer
               </Link>

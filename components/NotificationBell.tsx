@@ -103,7 +103,7 @@ export default function NotificationBell() {
             >
                 <span className="text-xl">🔔</span>
                 {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-[10px] font-bold flex items-center justify-center border-2 border-indigo-600">
+                    <span className="absolute top-0 right-0 h-4 w-4 bg-fuchsia-500 rounded-full text-[10px] font-bold flex items-center justify-center border-2 border-violet-600">
                         {unreadCount}
                     </span>
                 )}
@@ -116,7 +116,7 @@ export default function NotificationBell() {
                         {unreadCount > 0 && (
                             <button
                                 onClick={handleMarkAllRead}
-                                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                                className="text-xs text-violet-600 hover:text-violet-800 font-medium"
                             >
                                 Mark all read
                             </button>
@@ -135,7 +135,7 @@ export default function NotificationBell() {
                                         key={notification.id}
                                         href={notification.link || '#'}
                                         onClick={() => handleMarkAsRead(notification.id, notification.link || '#')}
-                                        className={`block p-4 hover:bg-gray-50 transition ${!notification.is_read ? 'bg-indigo-50/50' : ''}`}
+                                        className={`block p-4 hover:bg-gray-50 transition ${!notification.is_read ? 'bg-violet-50/50' : ''}`}
                                     >
                                         <div className="flex gap-3">
                                             <div className="text-lg">
@@ -154,7 +154,7 @@ export default function NotificationBell() {
                                                 </p>
                                             </div>
                                             {!notification.is_read && (
-                                                <div className="self-center h-2 w-2 bg-indigo-600 rounded-full"></div>
+                                                <div className="self-center h-2 w-2 bg-violet-600 rounded-full"></div>
                                             )}
                                         </div>
                                     </Link>

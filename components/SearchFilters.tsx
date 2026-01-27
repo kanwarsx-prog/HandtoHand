@@ -55,7 +55,7 @@ export default function SearchFilters() {
 
             {/* Search Bar */}
             <div className="flex-1 w-full relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-500 transition-colors">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors">
                     <Search size={20} />
                 </span>
                 <input
@@ -63,7 +63,7 @@ export default function SearchFilters() {
                     placeholder="Search for items, skills, neighbors..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-gray-50/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:bg-white focus:outline-none transition-all placeholder:text-gray-400 text-gray-800"
+                    className="w-full pl-11 pr-4 py-3 bg-white/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:bg-white focus:outline-none transition-all placeholder:text-slate-400 text-slate-800 shadow-sm"
                 />
             </div>
 
@@ -73,7 +73,7 @@ export default function SearchFilters() {
                     <select
                         value={category}
                         onChange={(e) => handleCategoryChange(e.target.value)}
-                        className="w-full pl-4 pr-10 py-3 appearance-none bg-gray-50/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:bg-white focus:outline-none transition-all cursor-pointer text-gray-700 font-medium"
+                        className="w-full pl-4 pr-10 py-3 appearance-none bg-white/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:bg-white focus:outline-none transition-all cursor-pointer text-slate-700 font-medium shadow-sm"
                     >
                         <option value="">All Categories</option>
                         {categories.map((cat) => (
