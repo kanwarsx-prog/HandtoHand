@@ -4,7 +4,6 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const ADMIN_EMAILS = ['admin@handtohand.com', 'kanwarsx@gmail.com'];
 
 async function getSupabaseAdmin() {
     const cookieStore = await cookies();
@@ -47,14 +46,20 @@ async function getSupabaseAdmin() {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user || !user.email || !ADMIN_EMAILS.includes(user.email)) {
+    if (!user) {
         throw new Error('Unauthorized');
     }
 
-    // Return the authorized user (we still use standard client for now, assuming we might need to fix RLS)
-    // Actually, to delete ANY offer, we definitely need admin privileges that RLS likely blocks.
-    // So we need a way to bypass RLS.
-    // "supabase-js" allows creating a client with service key.
+    // Check is_admin flag from DB (Standard client respects RLS, but user can read own data)
+    const { data: userData, error } = await supabase
+        .from('users')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single();
+
+    if (error || !userData || !userData.is_admin) {
+        throw new Error('Unauthorized');
+    }
 
     return { supabase, user }; // Returning standard client for now. 
     // If operations fail, I will switch to service role client creation inside the action.

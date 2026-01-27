@@ -4,8 +4,6 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { dismissReport, banUser, deleteOffer } from './actions';
 
-// Admin emails (should match actions.ts)
-const ADMIN_EMAILS = ['admin@handtohand.com', 'kanwarsx@gmail.com'];
 
 export default async function AdminDashboard() {
     const cookieStore = await cookies();
@@ -24,7 +22,27 @@ export default async function AdminDashboard() {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user || !user.email || !ADMIN_EMAILS.includes(user.email)) {
+    if (!user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <h1 className="text-4xl mb-4">🚫</h1>
+                    <h2 className="text-xl font-bold text-gray-900">Access Denied</h2>
+                    <p className="text-gray-500 mb-4">Please sign in to view this page.</p>
+                    <Link href="/login" className="text-indigo-600 hover:underline">Sign In</Link>
+                </div>
+            </div>
+        );
+    }
+
+    // Check is_admin flag
+    const { data: userData } = await supabase
+        .from('users')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.is_admin) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
