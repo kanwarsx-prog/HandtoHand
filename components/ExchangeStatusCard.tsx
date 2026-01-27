@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import FeedbackModal from './FeedbackModal';
 
 interface Exchange {
     id: string;
@@ -17,10 +18,12 @@ interface ExchangeStatusCardProps {
     exchange: Exchange;
     currentUserId: string;
     onUpdate: () => void;
+    partnerName?: string;
 }
 
-export default function ExchangeStatusCard({ exchange, currentUserId, onUpdate }: ExchangeStatusCardProps) {
+export default function ExchangeStatusCard({ exchange, currentUserId, onUpdate, partnerName = 'Partner' }: ExchangeStatusCardProps) {
     const [loading, setLoading] = useState(false);
+    const [showFeedback, setShowFeedback] = useState(false);
 
     // Determine my role and status
     const isInitiator = exchange.initiator_id === currentUserId;
@@ -52,8 +55,25 @@ export default function ExchangeStatusCard({ exchange, currentUserId, onUpdate }
             <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4 text-center">
                 <div className="text-2xl mb-2">🎉</div>
                 <h3 className="font-bold text-green-800">Exchange Completed!</h3>
-                <p className="text-green-600 text-sm">You've successfully helped each other.</p>
-                {/* Future: Add 'Leave Feedback' button here */}
+                <p className="text-green-600 text-sm mb-3">You've successfully helped each other.</p>
+                <button
+                    onClick={() => setShowFeedback(true)}
+                    className="text-sm font-bold text-green-700 underline hover:text-green-900"
+                >
+                    Leave Feedback
+                </button>
+
+                {showFeedback && (
+                    <FeedbackModal
+                        exchangeId={exchange.id}
+                        partnerName={partnerName}
+                        onClose={() => setShowFeedback(false)}
+                        onSuccess={() => {
+                            setShowFeedback(false);
+                            alert('Thank you for your feedback!');
+                        }}
+                    />
+                )}
             </div>
         );
     }

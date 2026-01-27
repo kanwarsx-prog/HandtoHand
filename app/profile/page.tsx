@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
+import TrustStats from '@/components/TrustStats';
 
 export default async function ProfilePage() {
     const cookieStore = await cookies();
@@ -94,12 +95,25 @@ export default async function ProfilePage() {
                                     </p>
                                 </div>
                             </div>
+                            import TrustStats from '@/components/TrustStats';
+
+                            // ... (existing imports)
+
+                            // (inside the component)
                             <Link
                                 href="/profile/edit"
                                 className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm bg-white"
                             >
                                 Edit Profile
                             </Link>
+                        </div>
+
+                        <div className="mb-6">
+                            <TrustStats userId={user.id} />
+                        </div>
+
+                        <div className="mb-6">
+                            <TrustStats userId={user.id} />
                         </div>
 
                         <div className="space-y-4">
