@@ -149,30 +149,29 @@ export default async function Home({
         </Suspense>
 
         {offers && offers.length > 0 ? (
-          { offers && offers.length > 0 ? (
-            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-              {offers.map((offer) => (
-                <div key={offer.id} className="break-inside-avoid">
-                  <OfferCard offer={offer} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            // Empty state
-            <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No matching offers found</h3>
-              <p className="text-gray-500 mb-6">
-                Try adjusting your search or filters.
-              </p>
-              <Link
-                href="/"
-                className="text-indigo-600 hover:text-indigo-800 font-medium"
-              >
-                Clear all filters
-              </Link>
-            </div>
-          )}
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+            {offers.map((offer) => (
+              <div key={offer.id} className="break-inside-avoid">
+                <OfferCard offer={offer} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          // Empty state
+          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No matching offers found</h3>
+            <p className="text-gray-500 mb-6">
+              Try adjusting your search or filters.
+            </p>
+            <Link
+              href="/"
+              className="text-indigo-600 hover:text-indigo-800 font-medium"
+            >
+              Clear all filters
+            </Link>
+          </div>
+        )}
       </main>
     </div>
   );
