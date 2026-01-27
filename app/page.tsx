@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
+import NotificationBell from '@/components/NotificationBell';
 import { findOffersForWishes } from '@/lib/matching';
 
 export default async function Home() {
@@ -91,13 +92,16 @@ export default async function Home() {
       ) : (
         /* Dashboard Header for Logged In Users */
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-8 px-4 sm:px-6 lg:px-8 shadow-sm">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
-              Welcome back, {user.user_metadata?.display_name || 'Neighbor'}! 👋
-            </h1>
-            <p className="text-indigo-100 mt-2 text-lg">
-              Here's what's happening in your local community today.
-            </p>
+          <div className="max-w-7xl mx-auto flex justify-between items-start">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">
+                Welcome back, {user.user_metadata?.display_name || 'Neighbor'}! 👋
+              </h1>
+              <p className="text-indigo-100 mt-2 text-lg">
+                Here's what's happening in your local community today.
+              </p>
+            </div>
+            <NotificationBell />
           </div>
         </div>
       )}

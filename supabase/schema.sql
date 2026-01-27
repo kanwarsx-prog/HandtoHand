@@ -277,3 +277,20 @@ CREATE TRIGGER update_conversations_updated_at BEFORE UPDATE ON "conversations"
 -- All tables created successfully!
 -- Next: Run Prisma generate to create the client
 -- cd packages/database && npx prisma db pull && npx prisma generate
+
+-- ============================================================================
+-- NOTIFICATIONS
+-- ============================================================================
+
+CREATE TABLE "notifications" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "user_id" UUID NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+    "type" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "link" TEXT,
+    "is_read" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX "notifications_user_id_is_read_idx" ON "notifications"("user_id", "is_read");

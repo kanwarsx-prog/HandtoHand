@@ -59,6 +59,28 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: sendError.message }, { status: 500 });
         }
 
+        // --- Notification Trigger ---
+        // Get recipient ID
+        const recipient = participation.user_id === user.id
+            ? (await supabase
+                .from('conversation_participants')
+                .select('user_id')
+                .eq('conversation_id', conversation_id)
+                .neq('user_id', user.id)
+                .single()).data?.user_id
+            : null; // Should be logic above but we need to fetch other participant
+
+        if (recipient) {
+            await supabase.from('notifications').insert({
+                user_id: recipient,
+                type: 'MESSAGE',
+                title: `New message from ${user.user_metadata.display_name || 'Neighbor'}`,
+                message: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
+                link: `/messages/${conversation_id}`
+            });
+        }
+        // ---------------------------
+
         // Update conversation timestamp
         await supabase
             .from('conversations')
