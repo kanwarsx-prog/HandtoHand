@@ -12,7 +12,10 @@ You'll need these environment variables from your Supabase project:
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
+
+> **Warning**: Never expose `SUPABASE_SERVICE_ROLE_KEY` with a `NEXT_PUBLIC_` prefix using it only in secure server-side environments like API routes or Server Components.
 
 Get them from: Supabase Dashboard → Project Settings → API
 

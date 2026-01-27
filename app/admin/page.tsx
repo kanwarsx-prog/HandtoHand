@@ -55,10 +55,35 @@ export default async function AdminDashboard() {
         );
     }
 
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!serviceRoleKey) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center max-w-lg mx-auto p-6 bg-white rounded-xl shadow-lg border border-red-100">
+                    <h1 className="text-4xl mb-4">🔧</h1>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Server Configuration Error</h2>
+                    <p className="text-gray-600 mb-4">
+                        The <code>SUPABASE_SERVICE_ROLE_KEY</code> environment variable is missing on the server.
+                    </p>
+                    <div className="bg-gray-100 p-3 rounded text-left text-xs font-mono text-gray-700 mb-4 overflow-x-auto">
+                        SUPABASE_SERVICE_ROLE_KEY=...
+                    </div>
+                    <p className="text-sm text-gray-500">
+                        Please add this variable in your Vercel Project Settings.
+                    </p>
+                    <div className="mt-6">
+                        <Link href="/" className="text-indigo-600 hover:underline">Return to Home</Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // Use Service Role to fetch all data bypassing RLS
     const adminDb = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        serviceRoleKey,
         { cookies: { getAll: () => [], setAll: () => { } } }
     );
 
