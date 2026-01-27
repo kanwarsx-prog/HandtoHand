@@ -1,9 +1,8 @@
-
-
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
+import { findOffersForWishes } from '@/lib/matching';
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -33,9 +32,43 @@ export default async function Home() {
     .eq('status', 'ACTIVE')
     .order('created_at', { ascending: false });
 
-  // If logged in, exclude own offers
+  // If logged in, exclude own offers and fetch wishes for recommendations
+  let recommendedOffers: any[] = []; // Using any[] for simplicity with the complex join types
+
   if (user) {
     query = query.neq('user_id', user.id);
+
+    // Fetch user's wishes for recommendations
+    const { data: wishes } = await supabase
+      .from('wishes')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'ACTIVE');
+
+    // Fetch ALL active offers for matching (we need them in memory to run the algorithm)
+    // Note: optimization would be to do this in DB, but for MVP JS algorithm is fine
+    // We fetch a larger set but maybe limit to last 100 for performance if we had real scale
+    const { data: allOffers } = await supabase
+      .from('offers')
+      .select(`
+            *,
+            category:categories(name, slug, icon),
+            user:users(display_name, profile_photo, postcode_outward)
+        `)
+      .eq('status', 'ACTIVE')
+      .neq('user_id', user.id);
+
+    if (wishes && allOffers) {
+      // We need to cast types or ensure matching.ts accepts the Supabase return types
+      // The matching lib expects { id, title, description, category_id, user_id, user: { ... } }
+      // Our query returns exactly that structure.
+      const matches = findOffersForWishes(
+        wishes as any[],
+        allOffers as any[],
+        user.user_metadata?.postcode_outward
+      );
+      recommendedOffers = matches.slice(0, 4).map(m => m.offer);
+    }
   }
 
   const { data: offers } = await query;
@@ -71,6 +104,23 @@ export default async function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+        {/* Recommendations Section */}
+        {user && recommendedOffers.length > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-2xl">✨</span>
+              <h2 className="text-xl font-bold text-gray-900">Suggested for you</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {recommendedOffers.map((offer) => (
+                <OfferCard key={offer.id} offer={offer} />
+              ))}
+            </div>
+            <div className="my-8 border-b border-gray-200"></div>
+          </div>
+        )}
+
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900">
             {user ? 'Latest from your Community' : 'Latest Offers'}
