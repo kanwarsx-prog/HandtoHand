@@ -90,7 +90,12 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
             </div>
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <ChatWindow conversationId={id} currentUser={user} />
+                <ChatWindow
+                    conversationId={id}
+                    currentUser={user}
+                    partner={otherUser}
+                    offer={conversation.offer}
+                />
             </main>
         </div>
     );

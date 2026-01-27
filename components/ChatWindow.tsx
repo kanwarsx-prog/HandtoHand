@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import ExchangeStatusCard from './ExchangeStatusCard';
 
 interface Message {
     id: string;
@@ -12,14 +13,19 @@ interface Message {
 
 export default function ChatWindow({
     conversationId,
-    currentUser
+    currentUser,
+    partner,
+    offer
 }: {
     conversationId: string;
     currentUser: any;
+    partner: any;
+    offer?: any;
 }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
+    const [exchange, setExchange] = useState<any>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const supabase = createClient();
 
@@ -28,17 +34,28 @@ export default function ChatWindow({
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Fetch initial messages
+    // Fetch exchange status
+    const fetchExchange = async () => {
+        if (!partner) return;
+        try {
+            const res = await fetch(`/api/exchanges?partner_id=${partner.id}`);
+            const data = await res.json();
+            if (data.exchange) {
+                setExchange(data.exchange);
+            }
+        } catch (error) {
+            console.error('Error fetching exchange:', error);
+        }
+    };
+
+    // Fetch initial messages and exchange
     useEffect(() => {
         async function fetchMessages() {
-            console.log('Fetching messages for conversation:', conversationId);
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('messages')
                 .select('*')
                 .eq('conversation_id', conversationId)
                 .order('created_at', { ascending: true });
-
-            console.log('Messages fetch result:', { data, error });
 
             if (data) {
                 setMessages(data);
@@ -47,6 +64,7 @@ export default function ChatWindow({
         }
 
         fetchMessages();
+        fetchExchange();
 
         // Subscribe to realtime changes
         const channel = supabase
@@ -69,7 +87,7 @@ export default function ChatWindow({
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [conversationId, supabase]);
+    }, [conversationId, supabase, partner?.id]);
 
     // Scroll on new messages
     useEffect(() => {
@@ -80,10 +98,6 @@ export default function ChatWindow({
     const sendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newMessage.trim()) return;
-
-        // Optimistic update
-        // const tempId = Math.random().toString();
-        // setMessages(prev => [...prev, { id: tempId, sender_id: currentUser.id, content: newMessage, created_at: new Date().toISOString() }]);
 
         setSending(true);
         try {
@@ -107,8 +121,59 @@ export default function ChatWindow({
         }
     };
 
+    const handleProposeExchange = async () => {
+        if (!confirm('Propose an official exchange with this user?')) return;
+
+        try {
+            const response = await fetch('/api/exchanges', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    partner_id: partner.id,
+                    offer_id: offer?.id,
+                    offer_title: offer?.title || 'Help/Item',
+                    wish_title: 'Something in return' // Simple default for now
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setExchange(data.exchange);
+                // Optionally send a system message
+            } else {
+                alert(data.error);
+            }
+        } catch (error) {
+            console.error('Error proposing exchange:', error);
+        }
+    };
+
     return (
         <div className="flex flex-col h-[600px] border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
+            {/* Exchange Status Header */}
+            <div className="bg-white border-b border-gray-100 p-4">
+                {exchange ? (
+                    <ExchangeStatusCard
+                        exchange={exchange}
+                        currentUserId={currentUser.id}
+                        onUpdate={fetchExchange}
+                    />
+                ) : (
+                    <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div>
+                            <p className="text-sm font-medium text-gray-900">Exchange Proposal</p>
+                            <p className="text-xs text-gray-500">Ready to commit to a swap?</p>
+                        </div>
+                        <button
+                            onClick={handleProposeExchange}
+                            className="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition shadow-sm"
+                        >
+                            Propose Exchange 🤝
+                        </button>
+                    </div>
+                )}
+            </div>
+
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                 {messages.map((msg) => {
