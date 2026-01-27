@@ -40,18 +40,18 @@ export default function OfferCard({ offer }: { offer: Offer }) {
                 href={`/offers/${offer.id}`}
                 className="block h-full group"
             >
-                <div className="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col p-6 relative overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10 hover:border-violet-200">
-                    {/* Permanent soft gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-violet-50/50 group-hover:to-fuchsia-50/50 transition-colors duration-500" />
+                <div className="bg-white rounded-3xl shadow-lg shadow-violet-500/10 border-2 border-violet-100 flex flex-col p-6 relative overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/20 hover:border-violet-300">
+                    {/* Permanent soft gradient background - STRONGER */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white via-violet-50/30 to-fuchsia-50/50" />
 
                     <div className="flex items-start justify-between mb-4 relative z-10">
                         {/* Icon - Always colorful */}
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 text-violet-600 flex items-center justify-center text-2xl shadow-sm border border-white group-hover:scale-110 transition-transform duration-500">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-100 to-fuchsia-100 text-violet-600 flex items-center justify-center text-2xl shadow-sm border border-white/50">
                             {offer.category?.icon || getIcon(offer.category?.slug || 'misc')}
                         </div>
                         <span className="
-                            inline-flex items-center px-3 py-1 
-                            rounded-full text-xs font-bold 
+                            inline-flex items-center px-3 py-1
+                            rounded-full text-xs font-bold
                             bg-white/80 backdrop-blur-sm text-slate-600 border border-slate-100 shadow-sm
                         ">
                             {offer.category?.name || 'Item'}

@@ -63,7 +63,7 @@ export default function SearchFilters() {
                     placeholder="Search for items, skills, neighbors..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:bg-white focus:outline-none transition-all placeholder:text-slate-400 text-slate-800 shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-violet-100 rounded-xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-300 focus:outline-none transition-all placeholder:text-slate-400 text-slate-800 shadow-sm"
                 />
             </div>
 
