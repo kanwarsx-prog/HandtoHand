@@ -57,25 +57,14 @@ export default async function Home() {
         </div>
       ) : (
         /* Dashboard Header for Logged In Users */
-        <div className="bg-white border-b border-gray-200 py-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Welcome back, {user.user_metadata?.display_name || 'Neighbor'}! 👋
-              </h1>
-              <p className="text-gray-500 mt-1">
-                Here's what's happening in your local community today.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Link
-                href="/profile"
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-500 px-3 py-2"
-              >
-                View Profile
-              </Link>
-              {/* Future: Add 'My Offers' link here */}
-            </div>
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-8 px-4 sm:px-6 lg:px-8 shadow-sm">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+              Welcome back, {user.user_metadata?.display_name || 'Neighbor'}! 👋
+            </h1>
+            <p className="text-indigo-100 mt-2 text-lg">
+              Here's what's happening in your local community today.
+            </p>
           </div>
         </div>
       )}
