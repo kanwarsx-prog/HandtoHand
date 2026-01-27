@@ -65,7 +65,6 @@ export default async function Home({
       .eq('status', 'ACTIVE');
 
     // Fetch ALL active offers for matching (we need them in memory to run the algorithm)
-    // Note: optimization would be to do this in DB, but for MVP JS algorithm is fine
     const { data: allOffers } = await supabase
       .from('offers')
       .select(`
@@ -77,7 +76,6 @@ export default async function Home({
       .neq('user_id', user.id);
 
     if (wishes && allOffers) {
-      // We need to cast types or ensure matching.ts accepts the Supabase return types
       const matches = findOffersForWishes(
         wishes as any[],
         allOffers as any[],
@@ -90,86 +88,108 @@ export default async function Home({
   const { data: offers } = await query;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-stone-50 overflow-x-hidden relative">
 
-      {/* Hero Section - Show only for non-logged in users */}
-      {!user ? (
-        <div className="bg-indigo-600 text-white py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">Exchange Skills & Items Locally</h1>
-            <p className="text-xl text-indigo-100 max-w-2xl mx-auto">
-              Join your neighbors in swapping gardening tips, tools, cooking, and more. No money, just community.
+      {/* Organic Background Blobs */}
+      <div className="absolute top-0 left-0 w-full h-[600px] -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-teal-200/40 rounded-full blur-[100px] mix-blend-multiply animate-fade-in delay-100"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-rose-200/40 rounded-full blur-[120px] mix-blend-multiply animate-fade-in delay-200"></div>
+        <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-100/50 rounded-full blur-[100px] mix-blend-multiply animate-fade-in delay-300"></div>
+      </div>
+
+      {/* Hero Section */}
+      <div className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center md:text-left relative z-10">
+        {!user ? (
+          <div className="text-center max-w-3xl mx-auto space-y-6">
+            <h1 className="text-5xl md:text-7xl font-display font-bold text-slate-900 tracking-tight animate-slide-up">
+              Share more.<br /> <span className="text-teal-600">Waste less.</span>
+            </h1>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto animate-slide-up delay-100">
+              Connect with your local community to swap skills, tools, and leftovers. No money, just kindness.
             </p>
           </div>
-        </div>
-      ) : (
-        /* Dashboard Header for Logged In Users */
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-8 px-4 sm:px-6 lg:px-8 shadow-sm">
-          <div className="max-w-7xl mx-auto flex justify-between items-start">
+        ) : (
+          <div className="flex flex-col md:flex-row justify-between items-end gap-6 animate-slide-up">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">
-                Welcome back, {user.user_metadata?.display_name || 'Neighbor'}! 👋
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800">
+                Hello, <span className="text-teal-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! 👋
               </h1>
-              <p className="text-indigo-100 mt-2 text-lg">
-                Here's what's happening in your local community today.
+              <p className="text-lg text-slate-600 mt-2">
+                Here's what your community is sharing today.
               </p>
             </div>
             <NotificationBell />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative z-10">
 
-        {/* Recommendations Section - Hide when searching or filtering */}
+        {/* Search floating over content */}
+        <div className="-mt-4 mb-12 relative z-20">
+          <Suspense fallback={<div className="h-20 bg-white/50 backdrop-blur rounded-2xl animate-pulse"></div>}>
+            <SearchFilters />
+          </Suspense>
+        </div>
+
+        {/* Recommendations */}
         {user && !search && !categoryId && recommendedOffers.length > 0 && (
-          <div className="mb-12">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="text-2xl">✨</span>
-              <h2 className="text-xl font-bold text-gray-900">Suggested for you</h2>
+          <div className="mb-16 animate-slide-up delay-200">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-xl shadow-inner">
+                ✨
+              </div>
+              <h2 className="text-2xl font-display font-bold text-slate-800">Suggested for you</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {recommendedOffers.map((offer) => (
-                <OfferCard key={offer.id} offer={offer} />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {recommendedOffers.map((offer, i) => (
+                <div key={offer.id} className="animate-scale-pop" style={{ animationDelay: `${i * 100}ms` }}>
+                  <OfferCard offer={offer} />
+                </div>
               ))}
             </div>
-            <div className="my-8 border-b border-gray-200"></div>
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <h2 className="text-xl font-bold text-gray-900">
+        {/* All Offers Feed */}
+        <div className="flex items-center gap-3 mb-8 animate-slide-up delay-300">
+          <h2 className="text-2xl font-display font-bold text-slate-800">
             {search || categoryId ? 'Search Results' : (user ? 'Latest from your Community' : 'Latest Offers')}
           </h2>
+          <div className="h-px bg-slate-200 flex-1 ml-4 opacity-50"></div>
         </div>
 
-        <Suspense fallback={<div className="h-20 bg-gray-100 animate-pulse rounded-xl mb-6"></div>}>
-          <SearchFilters />
-        </Suspense>
-
         {offers && offers.length > 0 ? (
-          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-            {offers.map((offer) => (
-              <div key={offer.id} className="break-inside-avoid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[minmax(0,1fr)]">
+            {offers.map((offer, i) => (
+              <div key={offer.id} className="animate-fade-in" style={{ animationDelay: `${(i % 5) * 100}ms` }}>
                 <OfferCard offer={offer} />
               </div>
             ))}
           </div>
         ) : (
-          // Empty state
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-            <div className="text-4xl mb-4">🔍</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No matching offers found</h3>
-            <p className="text-gray-500 mb-6">
-              Try adjusting your search or filters.
+          <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-dashed border-slate-300 animate-slide-up">
+            <div className="text-6xl mb-6 opacity-80">🍃</div>
+            <h3 className="text-2xl font-display font-bold text-slate-800 mb-2">No offers found</h3>
+            <p className="text-slate-500 mb-8 max-w-md mx-auto">
+              We couldn't find anything matching your search. Why not be the first to post something?
             </p>
-            <Link
-              href="/"
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
-            >
-              Clear all filters
-            </Link>
+            <div className="flex justify-center gap-4">
+              <Link
+                href="/"
+                className="px-6 py-2.5 rounded-full bg-slate-100 text-slate-600 font-medium hover:bg-slate-200 transition-colors"
+              >
+                Clear Search
+              </Link>
+              <Link
+                href="/offers/create"
+                className="px-6 py-2.5 rounded-full bg-teal-500 text-white font-bold hover:bg-teal-600 shadow-lg shadow-teal-500/30 transition-all hover:shadow-teal-500/50 hover:-translate-y-0.5"
+              >
+                Post an Offer
+              </Link>
+            </div>
           </div>
         )}
       </main>

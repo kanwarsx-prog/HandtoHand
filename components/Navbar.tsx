@@ -1,78 +1,91 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { usePathname } from 'next/navigation';
+import {
+    Home,
+    MessageCircle,
+    Target,
+    User,
+    Plus,
+    LogOut,
+    Menu,
+    X
+} from 'lucide-react';
 
 export default function Navbar() {
     const { user, signOut } = useAuth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
 
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-    const closeMobileMenu = () => {
-        setIsMobileMenuOpen(false);
-    };
-
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
     const isActive = (path: string) => pathname === path;
 
     return (
-        <nav className="bg-white shadow-sm sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex items-center">
-                        <Link href="/" className="text-2xl font-bold text-indigo-600 flex items-center gap-2" onClick={closeMobileMenu}>
-                            <span>🤝</span> HandtoHand
-                        </Link>
-                    </div>
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
+            <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? '' : 'sm:px-0'}`}>
+                <div className={`
+                    glass rounded-2xl px-6 h-16 flex items-center justify-between
+                    transition-all duration-300
+                    ${scrolled ? 'shadow-md bg-white/90' : 'bg-white/70'}
+                `}>
+
+                    {/* Logo */}
+                    <Link href="/" className="text-xl font-bold font-display text-teal-600 flex items-center gap-2" onClick={closeMobileMenu}>
+                        <span className="text-2xl">🤝</span>
+                        <span className="hidden sm:inline">HandtoHand</span>
+                    </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-4">
+                    <div className="hidden md:flex items-center space-x-1">
                         {user ? (
                             <>
-                                <Link
-                                    href="/matches"
-                                    className={`px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1 rounded-md ${isActive('/matches') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}`}
-                                >
-                                    🎯 Matches
-                                </Link>
-                                <Link
-                                    href="/messages"
-                                    className={`px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1 rounded-md ${isActive('/messages') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}`}
-                                >
-                                    💬 Messages
-                                </Link>
-                                <Link
-                                    href="/profile"
-                                    className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${isActive('/profile') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600'}`}
-                                >
-                                    Profile
-                                </Link>
-                                <div className="h-6 w-px bg-gray-200 mx-2"></div>
+                                <NavLink href="/matches" icon={<Target size={20} />} label="Matches" active={isActive('/matches')} />
+                                <NavLink href="/messages" icon={<MessageCircle size={20} />} label="Messages" active={isActive('/messages')} />
+                                <NavLink href="/profile" icon={<User size={20} />} label="Profile" active={isActive('/profile')} />
+
+                                <div className="h-6 w-px bg-gray-200 mx-3"></div>
+
                                 <Link
                                     href="/wishes/create"
-                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors shadow-sm"
+                                    className="p-2 text-teal-600 hover:bg-teal-50 rounded-full transition-colors tooltip-trigger relative group"
                                 >
-                                    + Wish
+                                    <Plus size={24} />
+                                    <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        New Wish
+                                    </span>
                                 </Link>
+
                                 <Link
                                     href="/offers/create"
-                                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+                                    className="px-4 py-2 bg-teal-500 text-white rounded-full text-sm font-medium hover:bg-teal-600 transition-all shadow-md hover:shadow-lg flex items-center gap-2 ml-2"
                                 >
-                                    + Offer
+                                    <Plus size={16} />
+                                    <span>Offer</span>
                                 </Link>
-                                <div className="ml-2 h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium border border-indigo-200 cursor-default" title={user.email || 'User'}>
-                                    {user.email?.[0].toUpperCase()}
-                                </div>
+
+                                <button
+                                    onClick={() => signOut()}
+                                    className="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+                                    title="Sign Out"
+                                >
+                                    <LogOut size={20} />
+                                </button>
                             </>
                         ) : (
                             <Link
                                 href="/auth/login"
-                                className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                                className="px-5 py-2.5 bg-teal-600 text-white rounded-full text-sm font-bold hover:bg-teal-700 transition-colors shadow-sm"
                             >
                                 Sign In
                             </Link>
@@ -80,24 +93,12 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center md:hidden">
+                    <div className="md:hidden">
                         <button
                             onClick={toggleMobileMenu}
-                            type="button"
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                            aria-controls="mobile-menu"
-                            aria-expanded={isMobileMenuOpen}
+                            className="p-2 text-gray-600 hover:bg-gray-100 rounded-full"
                         >
-                            <span className="sr-only">Open main menu</span>
-                            {!isMobileMenuOpen ? (
-                                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            ) : (
-                                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            )}
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
@@ -105,85 +106,78 @@ export default function Navbar() {
 
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full" id="mobile-menu">
-                    <div className="px-2 pt-2 pb-3 space-y-1">
-                        {user ? (
-                            <>
-                                <div className="px-3 py-3 border-b border-gray-100 mb-2 flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
-                                        {user.email?.[0].toUpperCase()}
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-gray-900 truncate">{user.user_metadata?.display_name || 'User'}</p>
-                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                                    </div>
-                                </div>
-                                <Link
-                                    href="/"
-                                    onClick={closeMobileMenu}
-                                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'}`}
-                                >
-                                    🏠 Home
-                                </Link>
-                                <Link
-                                    href="/matches"
-                                    onClick={closeMobileMenu}
-                                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/matches') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'}`}
-                                >
-                                    🎯 Matches
-                                </Link>
-                                <Link
-                                    href="/messages"
-                                    onClick={closeMobileMenu}
-                                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/messages') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'}`}
-                                >
-                                    💬 Messages
-                                </Link>
-                                <Link
-                                    href="/profile"
-                                    onClick={closeMobileMenu}
-                                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/profile') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'}`}
-                                >
-                                    👤 Profile
-                                </Link>
-                                <div className="grid grid-cols-2 gap-3 p-3 mt-2 border-t border-gray-100">
-                                    <Link
-                                        href="/wishes/create"
-                                        onClick={closeMobileMenu}
-                                        className="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg text-sm font-bold shadow-sm"
-                                    >
-                                        + Post Wish
-                                    </Link>
-                                    <Link
-                                        href="/offers/create"
-                                        onClick={closeMobileMenu}
-                                        className="flex items-center justify-center px-4 py-3 bg-indigo-600 text-white rounded-lg text-sm font-bold shadow-sm"
-                                    >
-                                        + Post Offer
-                                    </Link>
-                                </div>
-                                <button
-                                    onClick={() => {
-                                        signOut();
-                                        closeMobileMenu();
-                                    }}
-                                    className="w-full text-left block px-3 py-2 mt-1 rounded-md text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700"
-                                >
-                                    Sign Out
-                                </button>
-                            </>
-                        ) : (
+                <div className="absolute top-20 left-4 right-4 glass rounded-2xl p-4 md:hidden animate-fade-in origin-top">
+                    {user ? (
+                        <div className="flex flex-col gap-2">
+                            <MobileNavLink href="/" icon={<Home size={18} />} label="Home" onClick={closeMobileMenu} active={isActive('/')} />
+                            <MobileNavLink href="/matches" icon={<Target size={18} />} label="Matches" onClick={closeMobileMenu} active={isActive('/matches')} />
+                            <MobileNavLink href="/messages" icon={<MessageCircle size={18} />} label="Messages" onClick={closeMobileMenu} active={isActive('/messages')} />
+                            <MobileNavLink href="/profile" icon={<User size={18} />} label="Profile" onClick={closeMobileMenu} active={isActive('/profile')} />
+                            <div className="h-px bg-gray-100 my-2"></div>
                             <Link
-                                href="/auth/login"
+                                href="/wishes/create"
                                 onClick={closeMobileMenu}
-                                className="block w-full text-center px-4 py-3 bg-indigo-600 text-white rounded-lg font-bold"
+                                className="flex items-center gap-3 px-4 py-3 bg-teal-50 text-teal-700 rounded-xl font-medium"
                             >
-                                Sign In
+                                <Plus size={18} /> Post a Wish
                             </Link>
-                        )}
-                    </div>
+                            <Link
+                                href="/offers/create"
+                                onClick={closeMobileMenu}
+                                className="flex items-center gap-3 px-4 py-3 bg-teal-500 text-white rounded-xl font-medium shadow-sm"
+                            >
+                                <Plus size={18} /> Post an Offer
+                            </Link>
+                            <button
+                                onClick={() => { signOut(); closeMobileMenu(); }}
+                                className="flex items-center gap-3 px-4 py-3 text-red-500 font-medium mt-2"
+                            >
+                                <LogOut size={18} /> Sign Out
+                            </button>
+                        </div>
+                    ) : (
+                        <Link
+                            href="/auth/login"
+                            onClick={closeMobileMenu}
+                            className="block w-full text-center px-4 py-3 bg-teal-600 text-white rounded-xl font-bold"
+                        >
+                            Sign In
+                        </Link>
+                    )}
                 </div>
             )}
         </nav>
+    );
+}
+
+function NavLink({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active: boolean }) {
+    return (
+        <Link
+            href={href}
+            className={`
+                p-2 rounded-xl transition-all duration-200 group relative
+                ${active ? 'text-teal-600 bg-teal-50' : 'text-gray-500 hover:text-teal-500 hover:bg-gray-50'}
+            `}
+            title={label}
+        >
+            {icon}
+            {active && <span className="absolute bottom-1 left-1/2 w-1 h-1 bg-teal-500 rounded-full -translate-x-1/2"></span>}
+        </Link>
+    );
+}
+
+function MobileNavLink({ href, icon, label, onClick, active }: any) {
+    return (
+        <Link
+            href={href}
+            onClick={onClick}
+            className={`
+                flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors
+                ${active ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-50'}
+            `}
+        >
+            {icon}
+            <span>{label}</span>
+        </Link>
     );
 }

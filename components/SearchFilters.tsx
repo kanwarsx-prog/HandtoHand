@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback, useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { Search, X, ChevronDown } from 'lucide-react';
 
 export default function SearchFilters() {
     const searchParams = useSearchParams();
@@ -50,34 +51,41 @@ export default function SearchFilters() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row gap-4 items-center">
+        <div className="glass p-3 rounded-2xl shadow-sm mb-8 flex flex-col md:flex-row gap-3 items-center animate-slide-up">
 
             {/* Search Bar */}
-            <div className="flex-1 w-full relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <div className="flex-1 w-full relative group">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-500 transition-colors">
+                    <Search size={20} />
+                </span>
                 <input
                     type="text"
-                    placeholder="Search offers (e.g. 'drill', 'gardening')..."
+                    placeholder="Search for items, skills, neighbors..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:bg-white focus:outline-none transition-all placeholder:text-gray-400 text-gray-800"
                 />
             </div>
 
             {/* Category Filter */}
-            <div className="w-full md:w-48">
-                <select
-                    value={category}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
-                >
-                    <option value="">All Categories</option>
-                    {categories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                            {cat.icon} {cat.name}
-                        </option>
-                    ))}
-                </select>
+            <div className="w-full md:w-56 relative">
+                <div className="relative">
+                    <select
+                        value={category}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        className="w-full pl-4 pr-10 py-3 appearance-none bg-gray-50/50 hover:bg-white border border-transparent rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:bg-white focus:outline-none transition-all cursor-pointer text-gray-700 font-medium"
+                    >
+                        <option value="">All Categories</option>
+                        {categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.icon} {cat.name}
+                            </option>
+                        ))}
+                    </select>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                        <ChevronDown size={16} />
+                    </span>
+                </div>
             </div>
 
             {/* Clear Filters */}
@@ -88,9 +96,10 @@ export default function SearchFilters() {
                         setCategory('');
                         router.push(pathname);
                     }}
-                    className="text-sm text-gray-500 hover:text-red-500 whitespace-nowrap px-2"
+                    className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                    title="Clear Filters"
                 >
-                    Clear Filters
+                    <X size={20} />
                 </button>
             )}
         </div>

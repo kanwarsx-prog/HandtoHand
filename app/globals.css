@@ -1,6 +1,23 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-teal: #14b8a6;
+  --color-brand-coral: #f43f5e;
+  --color-brand-mint: #ccfbf1;
+  --color-brand-warm: #fff1f2;
+}
+
 @layer utilities {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
+  }
+
+  .glass-dark {
+    @apply bg-slate-900/80 backdrop-blur-md border border-slate-700/50 shadow-sm;
+  }
 
   /* Animations */
   @keyframes fade-in {
@@ -13,7 +30,7 @@
     }
   }
 
-  @keyframes slide-in {
+  @keyframes slide-up {
     from {
       opacity: 0;
       transform: translateY(20px);
@@ -25,7 +42,7 @@
     }
   }
 
-  @keyframes scale-in {
+  @keyframes scale-pop {
     from {
       opacity: 0;
       transform: scale(0.95);
@@ -38,14 +55,27 @@
   }
 
   .animate-fade-in {
-    animation: fade-in 0.5s ease-out;
+    animation: fade-in 0.6s ease-out forwards;
   }
 
-  .animate-slide-in {
-    animation: slide-in 0.5s ease-out;
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
   }
 
-  .animate-scale-in {
-    animation: scale-in 0.6s ease-out;
+  .animate-scale-pop {
+    animation: scale-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Stagger delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
   }
 }
