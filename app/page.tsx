@@ -162,7 +162,7 @@ export default async function Home({
         </div>
 
         {offers && offers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[minmax(0,1fr)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[minmax(0,1fr)]">
             {offers.map((offer, i) => (
               <div key={offer.id} className="animate-fade-in" style={{ animationDelay: `${(i % 5) * 100}ms` }}>
                 <OfferCard offer={offer} />
