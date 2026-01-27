@@ -34,33 +34,42 @@ export default function OfferCard({ offer }: { offer: any }) {
             href={`/offers/${offer.id}`}
             className="block group"
         >
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all h-full flex flex-col">
-                {/* Image or Placeholder */}
-                <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
-                    {offer.image_url ? (
+            <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all h-full flex flex-col ${!offer.image_url ? 'border-t-4 border-t-indigo-500' : ''}`}>
+                {/* Image or Placeholder - Only show if image exists */}
+                {offer.image_url && (
+                    <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden relative">
                         <img
                             src={offer.image_url}
                             alt={offer.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                    ) : (
-                        <div className="text-4xl group-hover:scale-105 transition-transform duration-300">
-                            {offer.category?.icon || getIcon(offer.category?.slug)}
+                        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+                            {offer.category?.icon || getIcon(offer.category?.slug)} {offer.category?.name || 'Item'}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <div className="p-4 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between mb-2">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
-                            {offer.category?.name || 'Item'}
-                        </span>
-                        <span className="text-xs text-gray-400">
-                            {new Date(offer.created_at).toLocaleDateString()}
-                        </span>
-                    </div>
+                    {!offer.image_url && (
+                        <div className="flex items-start justify-between mb-2">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                {offer.category?.icon || getIcon(offer.category?.slug)} {offer.category?.name || 'Item'}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                                {new Date(offer.created_at).toLocaleDateString()}
+                            </span>
+                        </div>
+                    )}
 
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                    {offer.image_url && (
+                        <div className="flex items-center justify-end mb-2">
+                            <span className="text-xs text-gray-400">
+                                {new Date(offer.created_at).toLocaleDateString()}
+                            </span>
+                        </div>
+                    )}
+
+                    <h3 className={`font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2 ${!offer.image_url ? 'text-xl' : 'text-lg'}`}>
                         {offer.title}
                     </h3>
 
