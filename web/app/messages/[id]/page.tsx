@@ -65,7 +65,9 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
         .eq('conversation_id', id)
         .neq('user_id', user.id);
 
-    const otherUser = otherParticipants?.[0]?.users;
+    const otherUserRaw = otherParticipants?.[0]?.users;
+    // Handle case where Supabase returns an array for the joined relation
+    const otherUser = Array.isArray(otherUserRaw) ? otherUserRaw[0] : otherUserRaw;
 
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
