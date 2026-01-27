@@ -67,4 +67,33 @@ npm run dev:mobile
 
 **That's it!** Your database is ready to use.
 
-The SQL file is at: `supabase/schema.sql`
+## Updates (If you already set up DB)
+
+### Update 1: Notifications Table
+If you have already set up the database, run this SQL to add the notifications system:
+
+```sql
+CREATE TABLE IF NOT EXISTS "notifications" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "user_id" UUID NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+    "type" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "link" TEXT,
+    "is_read" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS "notifications_user_id_is_read_idx" ON "notifications"("user_id", "is_read");
+
+ALTER TABLE "notifications" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own notifications" ON "notifications"
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert notifications" ON "notifications"
+    FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "Users can update their own notifications" ON "notifications"
+    FOR UPDATE USING (auth.uid() = user_id);
+```
