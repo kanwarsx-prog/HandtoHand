@@ -32,6 +32,55 @@ export default function OfferCard({ offer }: { offer: Offer }) {
     // Helper to safely get icon
     const getIcon = (slug: string) => CATEGORY_ICONS[slug] || '📦';
 
+    const hasImage = !!offer.image_url;
+
+    if (!hasImage) {
+        return (
+            <Link
+                href={`/offers/${offer.id}`}
+                className="block h-full"
+            >
+                <div className="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col p-6 relative overflow-hidden h-full transition-all duration-300 hover:shadow-md hover:border-teal-200">
+                    {/* Permanent soft gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-teal-50/50" />
+
+                    <div className="flex items-start justify-between mb-4 relative z-10">
+                        {/* Icon - Always colorful */}
+                        <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-2xl shadow-sm border border-teal-100">
+                            {offer.category?.icon || getIcon(offer.category?.slug || 'misc')}
+                        </div>
+                        <span className="
+                            inline-flex items-center px-3 py-1 
+                            rounded-full text-xs font-bold 
+                            bg-white/80 backdrop-blur-sm text-slate-600 border border-slate-100 shadow-sm
+                        ">
+                            {offer.category?.name || 'Item'}
+                        </span>
+                    </div>
+
+                    <h3 className="font-display font-bold text-xl text-slate-800 mb-2 line-clamp-2 leading-tight relative z-10">
+                        {offer.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-500 line-clamp-3 mb-4 relative z-10 font-medium">
+                        {offer.description}
+                    </p>
+
+                    <div className="flex items-center text-xs text-slate-400 pt-4 border-t border-slate-100 mt-auto relative z-10">
+                        <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs text-slate-600 font-bold">
+                                {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <span className="truncate max-w-[100px] font-semibold text-slate-500">{offer.user?.display_name || 'Neighbor'}</span>
+                        </div>
+                        <span className="mx-2 text-slate-300">•</span>
+                        <span>{new Date(offer.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                    </div>
+                </div>
+            </Link>
+        );
+    }
+
     return (
         <Link
             href={`/offers/${offer.id}`}
@@ -42,23 +91,14 @@ export default function OfferCard({ offer }: { offer: Offer }) {
                 transition-all duration-300 ease-out
                 border border-transparent hover:border-teal-100
                 shadow-sm hover:shadow-xl hover:-translate-y-1
-                ${!offer.image_url ? 'bg-gradient-to-br from-white to-stone-50' : ''}
             `}>
-                {/* Image or Placeholder */}
+                {/* Image or Placeholder - Only Image here now */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                    {offer.image_url ? (
-                        <img
-                            src={offer.image_url}
-                            alt={offer.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                    ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-teal-50/50">
-                            <span className="text-4xl mb-2 opacity-50 grayscale group-hover:grayscale-0 transition-all duration-300">
-                                {offer.category?.icon || getIcon(offer.category?.slug || 'misc')}
-                            </span>
-                        </div>
-                    )}
+                    <img
+                        src={offer.image_url!}
+                        alt={offer.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
 
                     {/* Category Badge - Glassmorphic */}
                     <div className="absolute top-3 left-3">
