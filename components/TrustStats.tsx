@@ -23,22 +23,23 @@ export default function TrustStats({ userId }: { userId: string }) {
     if (!stats) return null;
 
     return (
-        <div className="flex gap-4">
-            <div className="bg-indigo-50 rounded-lg px-4 py-2 border border-indigo-100 flex items-center gap-2">
-                <span className="text-xl">🤝</span>
-                <div>
-                    <p className="text-xs text-gray-500 font-medium uppercase">Exchanges</p>
-                    <p className="font-bold text-indigo-700">{stats.completed_count}</p>
-                </div>
+        <div className="flex items-center gap-8 py-4 border-t border-gray-100 mt-6">
+            <div className="flex flex-col">
+                <span className="text-2xl font-bold text-gray-900">{stats.completed_count}</span>
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Exchanges</span>
             </div>
 
-            {stats.total_feedback > 0 && (
-                <div className="bg-green-50 rounded-lg px-4 py-2 border border-green-100 flex items-center gap-2">
-                    <span className="text-xl">⭐</span>
-                    <div>
-                        <p className="text-xs text-gray-500 font-medium uppercase">Recommended</p>
-                        <p className="font-bold text-green-700">{stats.recommendation_percentage}%</p>
-                    </div>
+            <div className="w-px h-8 bg-gray-200"></div>
+
+            {stats.total_feedback > 0 ? (
+                <div className="flex flex-col">
+                    <span className="text-2xl font-bold text-green-600">{stats.recommendation_percentage}%</span>
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</span>
+                </div>
+            ) : (
+                <div className="flex flex-col">
+                    <span className="text-2xl font-bold text-gray-400">-</span>
+                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">No Ratings</span>
                 </div>
             )}
         </div>

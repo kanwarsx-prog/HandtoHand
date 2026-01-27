@@ -52,114 +52,94 @@ export default async function ProfilePage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-    // Placeholder for when no profile exists (shouldn't happen if they went through setup, but good fallback)
+    // Placeholder for when no profile exists
     const displayProfile = profile || {
         display_name: user.user_metadata?.display_name || 'User',
         email: user.email,
-        bio: 'No bio add yet.',
+        bio: '',
         postcode_outward: 'UNK',
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-12">
-            {/* Navigation Helper */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-14 items-center">
-                        <Link href="/" className="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center">
-                            ← Back to Home
-                        </Link>
-                        <h1 className="font-semibold text-gray-900">My Profile</h1>
-                        <div className="w-20"></div> {/* Spacer for centering */}
-                    </div>
-                </div>
-            </div>
+        <div className="min-h-screen bg-gray-50 pb-20">
+            {/* Header / Cover */}
+            <div className="h-48 bg-gradient-to-r from-slate-900 to-slate-800"></div>
 
-            <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-                {/* Profile Card */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="h-32 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
-                    <div className="px-8 pb-8">
-                        <div className="relative flex justify-between items-end -mt-12 mb-6">
-                            <div className="flex items-end">
-                                <div className="h-24 w-24 rounded-full border-4 border-white bg-white shadow-md flex items-center justify-center text-3xl font-bold text-indigo-600 bg-indigo-50">
-                                    {displayProfile.display_name?.[0]?.toUpperCase()}
+            <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+                    <div className="p-8">
+                        <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                            <div className="flex items-end gap-6">
+                                <div className="relative -mt-20">
+                                    <div className="h-32 w-32 rounded-2xl border-4 border-white bg-white shadow-lg flex items-center justify-center text-4xl font-bold text-indigo-600 bg-indigo-50">
+                                        {displayProfile.display_name?.[0]?.toUpperCase()}
+                                    </div>
+                                    <div className="absolute bottom-2 right-2 h-4 w-4 bg-green-500 border-2 border-white rounded-full"></div>
                                 </div>
-                                <div className="ml-4 mb-1">
-                                    <h2 className="text-2xl font-bold text-gray-900">{displayProfile.display_name}</h2>
-                                    <p className="text-sm text-gray-500 flex items-center">
-                                        <span>📍 {displayProfile.postcode_outward}</span>
-                                        <span className="mx-2">•</span>
-                                        <span>Joined {new Date(user.created_at).toLocaleDateString()}</span>
-                                    </p>
+                                <div className="pb-2">
+                                    <h1 className="text-3xl font-bold text-gray-900">{displayProfile.display_name}</h1>
+                                    <div className="flex items-center gap-4 text-gray-500 mt-1">
+                                        <span className="flex items-center gap-1 text-sm font-medium bg-gray-100 px-2 py-1 rounded">
+                                            📍 {displayProfile.postcode_outward}
+                                        </span>
+                                        <span className="text-sm">Joined {new Date(user.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+                                    </div>
                                 </div>
                             </div>
-                            import TrustStats from '@/components/TrustStats';
 
-                            // ... (existing imports)
-
-                            // (inside the component)
-                            <Link
-                                href="/profile/edit"
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm bg-white"
-                            >
-                                Edit Profile
-                            </Link>
+                            <div className="w-full md:w-auto mt-4 md:mt-0">
+                                <Link
+                                    href="/profile/edit"
+                                    className="block w-full md:w-auto text-center px-6 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-800 transition shadow-sm"
+                                >
+                                    Edit Profile
+                                </Link>
+                            </div>
                         </div>
 
-                        <div className="mb-6">
-                            <TrustStats userId={user.id} />
-                        </div>
-
-                        <div className="mb-6">
-                            <TrustStats userId={user.id} />
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-2">About Me</h3>
-                                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
-                                    {displayProfile.bio || "You haven't added a bio yet. Tell your neighbors about yourself!"}
+                        <div className="mt-8 grid md:grid-cols-3 gap-8">
+                            <div className="md:col-span-2">
+                                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">About</h3>
+                                <p className="text-gray-600 leading-relaxed text-lg">
+                                    {displayProfile.bio || "No bio added yet."}
                                 </p>
+
+                                <TrustStats userId={user.id} />
                             </div>
 
-                            {/* Categories/Interests could go here if we saved them to a dedicated table */}
+                            {/* Future: Sidebar stats or badges could go here */}
                         </div>
                     </div>
                 </div>
 
-                {/* My Offers Section */}
-                <div className="space-y-4">
+                {/* Content Tabs / Sections */}
+                <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-bold text-gray-900">My Offers ({myOffers?.length || 0})</h3>
+                        <h2 className="text-2xl font-bold text-gray-900">My Offers</h2>
                         <Link
                             href="/offers/create"
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                            className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-4 py-2 rounded-lg hover:bg-indigo-100 transition"
                         >
-                            + Create New
+                            <span>+</span> Create New
                         </Link>
                     </div>
 
                     {myOffers && myOffers.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {myOffers.map((offer) => (
-                                <div key={offer.id} className="relative group">
-                                    <OfferCard offer={offer} />
-                                    <div className="absolute top-2 right-2 pointer-events-none">
-                                        <span className={`text-[10px] px-2 py-1 rounded-full font-bold shadow-sm ${offer.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-                                            }`}>
-                                            {offer.status}
-                                        </span>
-                                    </div>
-                                </div>
+                                <OfferCard key={offer.id} offer={offer} />
                             ))}
                         </div>
                     ) : (
-                        <div className="bg-white rounded-xl border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                            <p className="mb-2">You haven't posted any offers yet.</p>
-                            <Link href="/offers/create" className="text-indigo-600 font-medium hover:underline">
-                                Create your first offer
+                        <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-12 text-center">
+                            <div className="text-4xl mb-4">📦</div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">No offers yet</h3>
+                            <p className="text-gray-500 mb-6 max-w-sm mx-auto">Start building your reputation by offering something useful to your neighbors.</p>
+                            <Link
+                                href="/offers/create"
+                                className="inline-block px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition"
+                            >
+                                Create Offer
                             </Link>
                         </div>
                     )}
