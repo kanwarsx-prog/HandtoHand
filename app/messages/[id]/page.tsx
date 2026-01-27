@@ -80,7 +80,7 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
                             <h1 className="font-semibold text-gray-900">{otherUser?.display_name || 'Chat'}</h1>
                             {conversation.offer && (
                                 <span className="text-xs text-gray-500 max-w-[200px] truncate">
-                                    Re: {conversation.offer.title}
+                                    Re: {(conversation.offer as any).title}
                                 </span>
                             )}
                         </div>
