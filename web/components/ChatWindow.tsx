@@ -12,10 +12,14 @@ interface Message {
 
 export default function ChatWindow({
     conversationId,
-    currentUser
+    currentUser,
+    partner,
+    offer
 }: {
     conversationId: string;
     currentUser: any;
+    partner?: any;
+    offer?: any;
 }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
