@@ -112,14 +112,18 @@ export default async function AdminDashboard() {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <div className="text-gray-500 text-sm font-medium uppercase">Total Users</div>
-                        <div className="text-3xl font-bold text-gray-900 mt-2">{usersCount || 0}</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <div className="text-gray-500 text-sm font-medium uppercase">Active Offers</div>
-                        <div className="text-3xl font-bold text-indigo-600 mt-2">{offersCount || 0}</div>
-                    </div>
+                    <Link href="/admin/users" className="block group">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-indigo-200">
+                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Total Users →</div>
+                            <div className="text-3xl font-bold text-gray-900 mt-2">{usersCount || 0}</div>
+                        </div>
+                    </Link>
+                    <Link href="/admin/offers" className="block group">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-indigo-200">
+                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Active Offers →</div>
+                            <div className="text-3xl font-bold text-indigo-600 mt-2">{offersCount || 0}</div>
+                        </div>
+                    </Link>
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <div className="text-gray-500 text-sm font-medium uppercase">Pending Reports</div>
                         <div className="text-3xl font-bold text-red-600 mt-2">{reportsCount || 0}</div>
