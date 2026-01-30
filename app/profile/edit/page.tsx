@@ -84,17 +84,10 @@ export default function EditProfilePage() {
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-14 items-center">
                         <Link href="/profile" className="text-sm font-medium text-gray-500 hover:text-gray-900">
-                            Cancel
+                            ← Cancel
                         </Link>
                         <h1 className="font-semibold text-gray-900">Edit Profile</h1>
-                        <button
-                            form="profile-form"
-                            type="submit"
-                            disabled={saving}
-                            className="text-sm font-bold text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
-                        >
-                            {saving ? 'Saving...' : 'Save'}
-                        </button>
+                        <div className="w-20"></div> {/* Spacer for centering */}
                     </div>
                 </div>
             </div>
@@ -152,6 +145,23 @@ export default function EditProfilePage() {
                             </div>
 
                         </div>
+                    </div>
+
+                    {/* Save Button */}
+                    <div className="flex gap-3">
+                        <Link
+                            href="/profile"
+                            className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-bold text-center"
+                        >
+                            Cancel
+                        </Link>
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {saving ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
 
                     <div className="text-center">
