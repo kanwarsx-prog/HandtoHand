@@ -154,6 +154,17 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
+                    {/* Save Button */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="w-full py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            {saving ? 'Saving Changes...' : 'Save Changes'}
+                        </button>
+                    </div>
+
                     <div className="text-center">
                         <p className="text-sm text-gray-500">
                             Want to change your interests? <br />
