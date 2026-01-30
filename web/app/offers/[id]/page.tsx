@@ -27,7 +27,7 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
         .select(`
       *,
       category:categories(name, slug, icon),
-      user:users(display_name, postcode_outward, email)
+      user:users(id, display_name, postcode_outward, email)
     `)
         .eq('id', id)
         .single();
@@ -108,13 +108,30 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
 
                         <div className="border-t border-gray-100 pt-6 flex flex-col sm:flex-row justify-between items-center bg-gray-50 rounded-xl p-6">
                             <div className="flex items-center mb-4 sm:mb-0">
-                                <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
-                                    {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
-                                </div>
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-900">Offered by {offer.user?.display_name}</p>
-                                    <p className="text-xs text-gray-500">Member since {new Date().getFullYear()}</p>
-                                </div>
+                                {offer.user?.id ? (
+                                    <Link
+                                        href={`/profile/${offer.user.id}`}
+                                        className="flex items-center hover:opacity-80 transition-opacity"
+                                    >
+                                        <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                                            {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                        </div>
+                                        <div className="ml-3">
+                                            <p className="text-sm font-medium text-gray-900">Offered by {offer.user?.display_name}</p>
+                                            <p className="text-xs text-gray-500">Member since {new Date().getFullYear()}</p>
+                                        </div>
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                                            {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                        </div>
+                                        <div className="ml-3">
+                                            <p className="text-sm font-medium text-gray-900">Offered by {offer.user?.display_name}</p>
+                                            <p className="text-xs text-gray-500">Member since {new Date().getFullYear()}</p>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             {!isOwner ? (

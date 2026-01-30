@@ -99,9 +99,19 @@ export default async function InboxPage() {
                                         className="block p-4 hover:bg-gray-50 transition-colors"
                                     >
                                         <div className="flex items-center space-x-4">
-                                            <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg flex-shrink-0">
-                                                {otherUser?.display_name?.[0]?.toUpperCase() || 'U'}
-                                            </div>
+                                            {otherUser?.id ? (
+                                                <Link
+                                                    href={`/profile/${otherUser.id}`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg flex-shrink-0 hover:bg-indigo-200 transition-colors"
+                                                >
+                                                    {otherUser?.display_name?.[0]?.toUpperCase() || 'U'}
+                                                </Link>
+                                            ) : (
+                                                <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg flex-shrink-0">
+                                                    {otherUser?.display_name?.[0]?.toUpperCase() || 'U'}
+                                                </div>
+                                            )}
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex justify-between items-start mb-1">
                                                     <h3 className="font-semibold text-gray-900 truncate">

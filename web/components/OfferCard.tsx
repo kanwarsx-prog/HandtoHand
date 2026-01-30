@@ -9,6 +9,7 @@ interface Offer {
         name: string;
     } | null;
     user: {
+        id?: string;
         display_name: string;
     } | null;
     created_at: string;
@@ -63,12 +64,25 @@ export default function OfferCard({ offer }: { offer: any }) {
                     </p>
 
                     <div className="flex items-center text-xs text-gray-400 pt-3 border-t border-gray-100 mt-auto relative z-10">
-                        <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-600 font-bold">
-                                {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                        {offer.user?.id ? (
+                            <Link
+                                href={`/profile/${offer.user.id}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
+                            >
+                                <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-600 font-bold">
+                                    {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <span className="truncate max-w-[100px] font-medium text-gray-500">{offer.user?.display_name || 'Neighbor'}</span>
+                            </Link>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-600 font-bold">
+                                    {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <span className="truncate max-w-[100px] font-medium text-gray-500">{offer.user?.display_name || 'Neighbor'}</span>
                             </div>
-                            <span className="truncate max-w-[100px] font-medium text-gray-500">{offer.user?.display_name || 'Neighbor'}</span>
-                        </div>
+                        )}
                         <span className="mx-2 text-gray-300">•</span>
                         <span>{new Date(offer.created_at).toLocaleDateString()}</span>
                     </div>
@@ -104,10 +118,25 @@ export default function OfferCard({ offer }: { offer: any }) {
                     </p>
 
                     <div className="flex items-center text-xs text-gray-500 pt-3 border-t border-gray-50">
-                        <div className="w-5 h-5 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] mr-2 font-bold">
-                            {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
-                        </div>
-                        <span className="font-medium">{offer.user?.display_name || 'Neighbor'}</span>
+                        {offer.user?.id ? (
+                            <Link
+                                href={`/profile/${offer.user.id}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex items-center hover:text-indigo-600 transition-colors"
+                            >
+                                <div className="w-5 h-5 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] mr-2 font-bold">
+                                    {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <span className="font-medium">{offer.user?.display_name || 'Neighbor'}</span>
+                            </Link>
+                        ) : (
+                            <>
+                                <div className="w-5 h-5 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] mr-2 font-bold">
+                                    {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <span className="font-medium">{offer.user?.display_name || 'Neighbor'}</span>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

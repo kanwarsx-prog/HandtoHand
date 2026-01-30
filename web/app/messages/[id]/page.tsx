@@ -79,7 +79,13 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
                             ← Back to Inbox
                         </Link>
                         <div className="flex flex-col items-center">
-                            <h1 className="font-semibold text-gray-900">{otherUser?.display_name || 'Chat'}</h1>
+                            {otherUser?.id ? (
+                                <Link href={`/profile/${otherUser.id}`} className="hover:opacity-80 transition-opacity">
+                                    <h1 className="font-semibold text-gray-900">{otherUser?.display_name || 'Chat'}</h1>
+                                </Link>
+                            ) : (
+                                <h1 className="font-semibold text-gray-900">{otherUser?.display_name || 'Chat'}</h1>
+                            )}
                             {conversation.offer && (
                                 <span className="text-xs text-gray-500 max-w-[200px] truncate">
                                     Re: {conversation.offer.title}
