@@ -44,6 +44,10 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
         );
     }
 
+    // Debug: Check if user ID is present
+    console.log('Offer user data:', offer.user);
+    console.log('User ID:', offer.user?.id);
+
     const isOwner = user?.id === offer.user_id;
 
     return (
@@ -111,13 +115,13 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
                                 {offer.user?.id ? (
                                     <Link
                                         href={`/profile/${offer.user.id}`}
-                                        className="flex items-center hover:opacity-80 transition-opacity"
+                                        className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
                                     >
-                                        <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                                        <div className="h-12 w-12 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-lg">
                                             {offer.user?.display_name?.[0]?.toUpperCase() || 'U'}
                                         </div>
                                         <div className="ml-3">
-                                            <p className="text-sm font-medium text-gray-900">Offered by {offer.user?.display_name}</p>
+                                            <p className="text-sm font-medium text-gray-900 hover:underline">Offered by {offer.user?.display_name}</p>
                                             <p className="text-xs text-gray-500">Member since {new Date().getFullYear()}</p>
                                         </div>
                                     </Link>
@@ -129,6 +133,7 @@ export default async function OfferDetailsPage({ params }: { params: { id: strin
                                         <div className="ml-3">
                                             <p className="text-sm font-medium text-gray-900">Offered by {offer.user?.display_name}</p>
                                             <p className="text-xs text-gray-500">Member since {new Date().getFullYear()}</p>
+                                            <p className="text-xs text-red-500">⚠️ DEBUG: User ID missing</p>
                                         </div>
                                     </>
                                 )}

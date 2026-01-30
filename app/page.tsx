@@ -37,7 +37,7 @@ export default async function Home({
     .select(`
       *,
       category:categories(name, slug, icon),
-      user:users(display_name, profile_photo)
+      user:users(id, display_name, profile_photo)
     `)
     .eq('status', 'ACTIVE')
     .order('created_at', { ascending: false });
@@ -70,7 +70,7 @@ export default async function Home({
       .select(`
             *,
             category:categories(name, slug, icon),
-            user:users(display_name, profile_photo, postcode_outward)
+            user:users(id, display_name, profile_photo, postcode_outward)
         `)
       .eq('status', 'ACTIVE')
       .neq('user_id', user.id);
