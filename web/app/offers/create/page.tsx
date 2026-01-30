@@ -13,6 +13,7 @@ const CATEGORIES = [
     { id: 'childcare', name: 'Childcare', icon: '👶' },
     { id: 'tech', name: 'Tech & Repair', icon: '💻' },
     { id: 'arts', name: 'Arts & Crafts', icon: '🎨' },
+    { id: 'books', name: 'Books', icon: '📖' },
 ];
 
 export default function CreateOfferPage() {
@@ -163,8 +164,8 @@ export default function CreateOfferPage() {
                                         type="button"
                                         onClick={() => setCategoryId(cat.id)}
                                         className={`p-3 rounded-xl border-2 transition-all text-left flex flex-col items-center justify-center space-y-2 ${categoryId === cat.id
-                                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                                                : 'border-gray-200 hover:border-indigo-300 text-gray-600'
+                                            ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                            : 'border-gray-200 hover:border-indigo-300 text-gray-600'
                                             }`}
                                     >
                                         <span className="text-2xl">{cat.icon}</span>

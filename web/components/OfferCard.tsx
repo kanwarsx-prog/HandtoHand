@@ -23,6 +23,7 @@ const CATEGORY_ICONS: Record<string, string> = {
     childcare: '👶',
     tech: '💻',
     arts: '🎨',
+    books: '📖',
 };
 
 export default function OfferCard({ offer }: { offer: any }) {

@@ -15,6 +15,7 @@ const CATEGORIES = [
     { id: '6', name: 'Childcare', icon: '👶', slug: 'childcare' },
     { id: '7', name: 'Tech & Repair', icon: '💻', slug: 'tech' },
     { id: '8', name: 'Arts & Crafts', icon: '🎨', slug: 'arts' },
+    { id: '9', name: 'Books', icon: '📖', slug: 'books' },
 ];
 
 export default function ProfileSetupPage() {

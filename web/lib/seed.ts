@@ -9,6 +9,7 @@ const CATEGORIES = [
     { name: 'Childcare', slug: 'childcare', icon: '👶', order: 6 },
     { name: 'Tech & Repair', slug: 'tech', icon: '💻', order: 7 },
     { name: 'Arts & Crafts', slug: 'arts', icon: '🎨', order: 8 },
+    { name: 'Books', slug: 'books', icon: '📖', order: 9 },
 ];
 
 export async function seedCategories() {
