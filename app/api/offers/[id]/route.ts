@@ -2,6 +2,50 @@ import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+export async function GET(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const cookieStore = await cookies();
+        const { id } = await params;
+
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    get(name: string) {
+                        return cookieStore.get(name)?.value;
+                    },
+                },
+            }
+        );
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { data: offer, error } = await supabase
+            .from('offers')
+            .select('*, category:categories(*)')
+            .eq('id', id)
+            .eq('user_id', user.id)
+            .single();
+
+        if (error || !offer) {
+            return NextResponse.json({ error: 'Offer not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ offer });
+    } catch (error: any) {
+        console.error('Get offer error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+
 export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
