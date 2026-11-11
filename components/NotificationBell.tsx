@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
 
 interface Notification {
     id: string;
@@ -19,7 +18,6 @@ export default function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const supabase = createClient();
 
     const fetchNotifications = async () => {
         try {

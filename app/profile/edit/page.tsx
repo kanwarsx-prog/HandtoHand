@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
 import ProfilePhotoUpload from '@/components/ProfilePhotoUpload';
 
 export default function EditProfilePage() {
@@ -15,23 +14,16 @@ export default function EditProfilePage() {
     const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
     const [userId, setUserId] = useState<string>('');
     const router = useRouter();
-    const supabase = createClient();
-
     useEffect(() => {
         async function loadProfile() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
+            const response = await fetch('/api/profile');
+            if (response.status === 401) {
                 router.push('/auth/login');
                 return;
             }
-
+            const { profile, user } = await response.json();
+            if (!response.ok || !user) throw new Error('Failed to load profile');
             setUserId(user.id);
-
-            const { data: profile } = await supabase
-                .from('users')
-                .select('*')
-                .eq('id', user.id)
-                .single();
 
             if (profile) {
                 setDisplayName(profile.display_name || '');
@@ -43,7 +35,7 @@ export default function EditProfilePage() {
         }
 
         loadProfile();
-    }, [router, supabase]);
+    }, [router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

@@ -2,6 +2,16 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+export async function GET() {
+    const supabase = await import('@/lib/supabase/server').then(({ createClient }) => createClient());
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const { data: profile, error } = await supabase.from('users').select('*').eq('id', user.id).maybeSingle();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ profile, user: { id: user.id, email: user.email, name: (user as { name?: string }).name } });
+}
+
 export async function POST(request: Request) {
     try {
         const cookieStore = await cookies();

@@ -2,15 +2,12 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback, useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { Search, X, ChevronDown } from 'lucide-react';
 
 export default function SearchFilters() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-    const supabase = createClient();
-
     const [categories, setCategories] = useState<any[]>([]);
     const [search, setSearch] = useState(searchParams.get('q') || '');
     const [category, setCategory] = useState(searchParams.get('category') || '');
@@ -18,11 +15,8 @@ export default function SearchFilters() {
     // Fetch categories on mount
     useEffect(() => {
         async function fetchCategories() {
-            const { data } = await supabase
-                .from('categories')
-                .select('id, name, icon')
-                .order('order');
-            if (data) setCategories(data);
+            const response = await fetch('/api/categories');
+            if (response.ok) setCategories((await response.json()).categories || []);
         }
         fetchCategories();
     }, []);

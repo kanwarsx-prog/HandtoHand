@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 
 const CATEGORIES = [
     { id: 'food', name: 'Food & Cooking', icon: '🍳' },
@@ -26,18 +25,16 @@ export default function EditOfferPage({ params }: { params: { id: string } }) {
     const [fetchingOffer, setFetchingOffer] = useState(true);
     const [offerId, setOfferId] = useState<string>('');
     const router = useRouter();
-    const supabase = createClient();
 
     useEffect(() => {
         async function fetchOffer() {
             const { id } = await params;
             setOfferId(id);
 
-            const { data: offer, error } = await supabase
-                .from('offers')
-                .select('*, category:categories(slug)')
-                .eq('id', id)
-                .single();
+            const response = await fetch(`/api/offers/${id}`);
+            const result = await response.json();
+            const offer = result.offer;
+            const error = !response.ok ? result.error : null;
 
             if (error || !offer) {
                 alert('Offer not found');
@@ -58,7 +55,7 @@ export default function EditOfferPage({ params }: { params: { id: string } }) {
         }
 
         fetchOffer();
-    }, [params, router, supabase]);
+    }, [params, router]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {

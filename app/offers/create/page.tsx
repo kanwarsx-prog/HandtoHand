@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 
 const CATEGORIES = [
     { id: 'food', name: 'Food & Cooking', icon: '🍳' },
@@ -23,7 +22,6 @@ export default function CreateOfferPage() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const supabase = createClient();
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {

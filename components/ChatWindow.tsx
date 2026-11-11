@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import ExchangeStatusCard from './ExchangeStatusCard';
 
 interface Message {
@@ -27,7 +26,6 @@ export default function ChatWindow({
     const [sending, setSending] = useState(false);
     const [exchange, setExchange] = useState<any>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const supabase = createClient();
 
     // Scroll to bottom helper
     const scrollToBottom = () => {
@@ -51,14 +49,10 @@ export default function ChatWindow({
     // Fetch initial messages and exchange
     useEffect(() => {
         async function fetchMessages() {
-            const { data } = await supabase
-                .from('messages')
-                .select('*')
-                .eq('conversation_id', conversationId)
-                .order('created_at', { ascending: true });
-
-            if (data) {
-                setMessages(data);
+            const response = await fetch(`/api/messages?conversationId=${encodeURIComponent(conversationId)}`);
+            const result = await response.json();
+            if (response.ok && result.messages) {
+                setMessages(result.messages);
                 scrollToBottom();
             }
         }
@@ -70,7 +64,7 @@ export default function ChatWindow({
         return () => {
             clearInterval(interval);
         };
-    }, [conversationId, supabase, partner?.id]);
+    }, [conversationId, partner?.id]);
 
     // Scroll on new messages
     useEffect(() => {
