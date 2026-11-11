@@ -125,7 +125,7 @@ export default async function Home({
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 animate-slide-up">
             <div>
               <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800 leading-tight">
-                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{currentProfile?.display_name || (user as { name?: string }).name || 'Neighbor'}</span>! ðŸ‘‹
+                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{currentProfile?.display_name || (user as { name?: string }).name || 'Neighbor'}</span>! &#128075;
               </h1>
               <p className="text-lg text-slate-600 mt-2">
                 Here's what your community is sharing today.
