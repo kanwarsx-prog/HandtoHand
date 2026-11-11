@@ -73,6 +73,7 @@ CREATE TABLE "offers" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "category_id" UUID NOT NULL,
+    "image_url" TEXT,
     "availability" TEXT,
     "location_radius" INTEGER NOT NULL DEFAULT 5,
     "location_lat" DOUBLE PRECISION,
