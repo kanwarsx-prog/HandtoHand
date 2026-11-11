@@ -1,6 +1,6 @@
-'use server';
+﻿'use server';
 
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -73,11 +73,7 @@ export async function dismissReport(reportId: string) {
         // We need to bypass RLS to update reports table if policies don't allow it.
         // My schema said: users can insert. No policy for update mentioned for "Admins".
         // Use Service Key for the actual operation.
-        const adminClient = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!,
-            { cookies: { getAll: () => [], setAll: () => { } } }
-        );
+        const adminClient = supabase;
 
         const { error } = await adminClient
             .from('reports')
@@ -97,11 +93,7 @@ export async function banUser(userId: string) {
     try {
         const { supabase } = await getSupabaseAdmin();
 
-        const adminClient = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!,
-            { cookies: { getAll: () => [], setAll: () => { } } }
-        );
+        const adminClient = supabase;
 
         // 1. Update user status
         const { error: userError } = await adminClient
@@ -128,11 +120,7 @@ export async function deleteOffer(offerId: string, reportId?: string) {
     try {
         const { supabase } = await getSupabaseAdmin();
 
-        const adminClient = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!,
-            { cookies: { getAll: () => [], setAll: () => { } } }
-        );
+        const adminClient = supabase;
 
         const { error } = await adminClient
             .from('offers')
@@ -160,11 +148,7 @@ export async function unbanUser(userId: string) {
     try {
         const { supabase } = await getSupabaseAdmin();
 
-        const adminClient = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!,
-            { cookies: { getAll: () => [], setAll: () => { } } }
-        );
+        const adminClient = supabase;
 
         // 1. Update user status
         const { error: userError } = await adminClient
@@ -179,3 +163,4 @@ export async function unbanUser(userId: string) {
         return { error: error.message };
     }
 }
+

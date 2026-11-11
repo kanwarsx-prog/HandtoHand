@@ -37,32 +37,9 @@ export default function NotificationBell() {
     useEffect(() => {
         fetchNotifications();
 
-        // Subscribe to real-time notifications
-        // Note: For full realtime we need channel subscription on 'notifications' table
-        const channel = supabase
-            .channel('realtime_notifications')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'notifications',
-                    // Filter by user_id would be best but RLS protects us so 'public' with client RLS check works? 
-                    // Actually client-side subscription filters need precise syntax or they receive everything (and RLS might block data but event fires?)
-                    // For MVP polling or simple refresh on navigation is safer than debugging RLS+RT right now.
-                    // Let's stick to polling every 30s or just on mount for now to be robust. 
-                },
-                (payload) => {
-                    // Optimized: just fetch again
-                    fetchNotifications();
-                }
-            )
-            .subscribe();
-
         const interval = setInterval(fetchNotifications, 30000); // Poll every 30s as backup
 
         return () => {
-            supabase.removeChannel(channel);
             clearInterval(interval);
         };
     }, []);

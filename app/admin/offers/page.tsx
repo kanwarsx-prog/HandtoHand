@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { deleteOffer } from '../actions';
@@ -37,14 +37,7 @@ export default async function AdminOffersPage({
         return redirect('/');
     }
 
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!serviceRoleKey) return <div>Config Error</div>;
-
-    const adminDb = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        serviceRoleKey,
-        { cookies: { getAll: () => [], setAll: () => { } } }
-    );
+    const adminDb = supabase;
 
     let query = adminDb
         .from('offers')
@@ -67,7 +60,7 @@ export default async function AdminOffersPage({
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
-                        <Link href="/admin" className="text-gray-500 hover:text-gray-900">← Dashboard</Link>
+                        <Link href="/admin" className="text-gray-500 hover:text-gray-900">â† Dashboard</Link>
                         <h1 className="text-3xl font-bold text-gray-900">Offers Management</h1>
                     </div>
                 </div>
@@ -132,3 +125,4 @@ export default async function AdminOffersPage({
         </div>
     );
 }
+

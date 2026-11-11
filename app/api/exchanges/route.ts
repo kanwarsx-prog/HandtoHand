@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -125,3 +125,4 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+

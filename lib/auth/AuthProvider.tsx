@@ -1,11 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
+import { authClient } from '@/lib/auth/client';
 
 type AuthContextType = {
-    user: User | null;
+    user: { id: string; email: string; name?: string | null } | null;
     loading: boolean;
     signUp: (email: string, password: string, displayName: string) => Promise<{ error: Error | null }>;
     signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -15,39 +14,20 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<AuthContextType['user']>(null);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
 
     useEffect(() => {
-        // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
-
-        // Listen for auth changes
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-        });
-
-        return () => subscription.unsubscribe();
+        authClient.getSession()
+            .then(({ data }) => setUser(data?.user ?? null))
+            .catch(() => setUser(null))
+            .finally(() => setLoading(false));
     }, []);
 
     const signUp = async (email: string, password: string, displayName: string) => {
         try {
-            const { error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        display_name: displayName,
-                    },
-                },
-            });
-            return { error };
+            const { error } = await authClient.signUp.email({ email, password, name: displayName });
+            return { error: error ? new Error(error.message || 'Sign-up failed') : null };
         } catch (error) {
             return { error: error as Error };
         }
@@ -55,18 +35,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signIn = async (email: string, password: string) => {
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            return { error };
+            const { error } = await authClient.signIn.email({ email, password });
+            return { error: error ? new Error(error.message || 'Sign-in failed') : null };
         } catch (error) {
             return { error: error as Error };
         }
     };
 
     const signOut = async () => {
-        await supabase.auth.signOut();
+        await authClient.signOut();
     };
 
     return (

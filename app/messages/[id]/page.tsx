@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import ChatWindow from '@/components/ChatWindow';
@@ -100,3 +100,4 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
         </div>
     );
 }
+

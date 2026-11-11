@@ -65,27 +65,10 @@ export default function ChatWindow({
 
         fetchMessages();
         fetchExchange();
-
-        // Subscribe to realtime changes
-        const channel = supabase
-            .channel('realtime messages')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'messages',
-                    filter: `conversation_id=eq.${conversationId}`,
-                },
-                (payload) => {
-                    setMessages((current) => [...current, payload.new as Message]);
-                    scrollToBottom();
-                }
-            )
-            .subscribe();
+        const interval = setInterval(fetchMessages, 5000);
 
         return () => {
-            supabase.removeChannel(channel);
+            clearInterval(interval);
         };
     }, [conversationId, supabase, partner?.id]);
 

@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
-import { createServerClient } from '@supabase/ssr';
+﻿import { Suspense } from 'react';
+import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
@@ -112,7 +112,7 @@ export default async function Home({
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 animate-slide-up">
             <div>
               <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800 leading-tight">
-                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! 👋
+                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! ðŸ‘‹
               </h1>
               <p className="text-lg text-slate-600 mt-2">
                 Here's what your community is sharing today.
@@ -138,7 +138,7 @@ export default async function Home({
           <div className="mb-16 animate-slide-up delay-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 flex items-center justify-center text-xl shadow-sm border border-white">
-                ✨
+                âœ¨
               </div>
               <h2 className="text-2xl font-display font-bold text-slate-800">Suggested for you</h2>
             </div>
@@ -171,7 +171,7 @@ export default async function Home({
           </div>
         ) : (
           <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-dashed border-slate-300 animate-slide-up">
-            <div className="text-6xl mb-6 opacity-80 animate-bounce">🍃</div>
+            <div className="text-6xl mb-6 opacity-80 animate-bounce">ðŸƒ</div>
             <h3 className="text-2xl font-display font-bold text-slate-800 mb-2">No offers found</h3>
             <p className="text-slate-500 mb-8 max-w-md mx-auto">
               We couldn't find anything matching your search. Why not be the first to post something?
@@ -196,3 +196,4 @@ export default async function Home({
     </div>
   );
 }
+

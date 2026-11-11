@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
@@ -77,7 +77,7 @@ export default async function InboxPage() {
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-14 items-center">
                         <Link href="/" className="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center">
-                            ← Back to Home
+                            â† Back to Home
                         </Link>
                         <h1 className="font-semibold text-gray-900">Messages</h1>
                         <div className="w-20"></div>
@@ -124,7 +124,7 @@ export default async function InboxPage() {
                         </div>
                     ) : (
                         <div className="text-center py-12 px-4">
-                            <div className="text-4xl mb-4">💬</div>
+                            <div className="text-4xl mb-4">ðŸ’¬</div>
                             <h3 className="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
                             <p className="text-gray-500 mb-6">
                                 Start a conversation by messaging someone about their offer!
@@ -142,3 +142,4 @@ export default async function InboxPage() {
         </div>
     );
 }
+

@@ -81,20 +81,14 @@ export default function EditOfferPage({ params }: { params: { id: string } }) {
                 const fileName = `${Math.random()}.${fileExt}`;
                 const filePath = `${fileName}`;
 
-                const { error: uploadError } = await supabase.storage
-                    .from('offers')
-                    .upload(filePath, imageFile);
-
-                if (uploadError) {
-                    throw uploadError;
-                }
-
-                // Get Public URL
-                const { data: { publicUrl } } = supabase.storage
-                    .from('offers')
-                    .getPublicUrl(filePath);
-
-                imageUrl = publicUrl;
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('bucket', 'offers');
+                formData.append('path', filePath);
+                const uploadResponse = await fetch('/api/storage', { method: 'POST', body: formData });
+                const uploadResult = await uploadResponse.json();
+                if (!uploadResponse.ok) throw new Error(uploadResult.error || 'Image upload failed');
+                imageUrl = uploadResult.publicUrl;
             }
 
             // Update Offer via API

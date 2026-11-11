@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -26,7 +26,7 @@ export default async function AdminDashboard() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
-                    <h1 className="text-4xl mb-4">🚫</h1>
+                    <h1 className="text-4xl mb-4">ðŸš«</h1>
                     <h2 className="text-xl font-bold text-gray-900">Access Denied</h2>
                     <p className="text-gray-500 mb-4">Please sign in to view this page.</p>
                     <Link href="/login" className="text-indigo-600 hover:underline">Sign In</Link>
@@ -46,7 +46,7 @@ export default async function AdminDashboard() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
-                    <h1 className="text-4xl mb-4">🚫</h1>
+                    <h1 className="text-4xl mb-4">ðŸš«</h1>
                     <h2 className="text-xl font-bold text-gray-900">Access Denied</h2>
                     <p className="text-gray-500 mb-4">You do not have permission to view this page.</p>
                     <Link href="/" className="text-indigo-600 hover:underline">Return Home</Link>
@@ -61,7 +61,7 @@ export default async function AdminDashboard() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center max-w-lg mx-auto p-6 bg-white rounded-xl shadow-lg border border-red-100">
-                    <h1 className="text-4xl mb-4">🔧</h1>
+                    <h1 className="text-4xl mb-4">ðŸ”§</h1>
                     <h2 className="text-xl font-bold text-gray-900 mb-2">Server Configuration Error</h2>
                     <p className="text-gray-600 mb-4">
                         The <code>SUPABASE_SERVICE_ROLE_KEY</code> environment variable is missing on the server.
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard 🛡️</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard ðŸ›¡ï¸</h1>
                     <Link href="/" className="text-gray-500 hover:text-gray-900">Back to App</Link>
                 </div>
 
@@ -114,13 +114,13 @@ export default async function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <Link href="/admin/users" className="block group">
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-indigo-200">
-                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Total Users →</div>
+                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Total Users â†’</div>
                             <div className="text-3xl font-bold text-gray-900 mt-2">{usersCount || 0}</div>
                         </div>
                     </Link>
                     <Link href="/admin/offers" className="block group">
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-indigo-200">
-                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Active Offers →</div>
+                            <div className="text-gray-500 text-sm font-medium uppercase group-hover:text-indigo-600">Active Offers â†’</div>
                             <div className="text-3xl font-bold text-indigo-600 mt-2">{offersCount || 0}</div>
                         </div>
                     </Link>
@@ -215,7 +215,7 @@ export default async function AdminDashboard() {
                         </div>
                     ) : (
                         <div className="p-12 text-center text-gray-500">
-                            No pending reports. All good! 🎉
+                            No pending reports. All good! ðŸŽ‰
                         </div>
                     )}
                 </div>
@@ -223,3 +223,4 @@ export default async function AdminDashboard() {
         </div>
     );
 }
+

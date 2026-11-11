@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
@@ -91,7 +91,7 @@ export default async function ProfilePage() {
                                     <h1 className="text-3xl font-bold text-gray-900">{displayProfile.display_name}</h1>
                                     <div className="flex items-center gap-4 text-gray-500 mt-1">
                                         <span className="flex items-center gap-1 text-sm font-medium bg-gray-100 px-2 py-1 rounded">
-                                            📍 {displayProfile.postcode_outward}
+                                            ðŸ“ {displayProfile.postcode_outward}
                                         </span>
                                         <span className="text-sm">Joined {new Date(user.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
                                     </div>
@@ -143,7 +143,7 @@ export default async function ProfilePage() {
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-12 text-center">
-                            <div className="text-4xl mb-4">📦</div>
+                            <div className="text-4xl mb-4">ðŸ“¦</div>
                             <h3 className="text-lg font-bold text-gray-900 mb-2">No offers yet</h3>
                             <p className="text-gray-500 mb-6 max-w-sm mx-auto">Start building your reputation by offering something useful to your neighbors.</p>
                             <Link
@@ -176,7 +176,7 @@ export default async function ProfilePage() {
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-12 text-center">
-                            <div className="text-4xl mb-4">✨</div>
+                            <div className="text-4xl mb-4">âœ¨</div>
                             <h3 className="text-lg font-bold text-gray-900 mb-2">No wishes yet</h3>
                             <p className="text-gray-500 mb-6 max-w-sm mx-auto">Looking for something? Let your neighbors know what you need help with.</p>
                             <Link
@@ -192,3 +192,4 @@ export default async function ProfilePage() {
         </div>
     );
 }
+

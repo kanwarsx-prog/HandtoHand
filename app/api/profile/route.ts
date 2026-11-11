@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+﻿import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { displayName, postcode, bio, categories } = body;
+        const { displayName, postcode, bio, categories, profilePhoto } = body;
 
         // Validate required fields
         if (!displayName || !postcode || !bio) {
@@ -60,6 +60,7 @@ export async function POST(request: Request) {
                 postcode_outward: postcodeOutward,
                 postcode_full: postcode,
                 bio: bio,
+                profile_photo: profilePhoto || null,
                 updated_at: new Date().toISOString(),
             })
             .select()
@@ -79,3 +80,4 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+

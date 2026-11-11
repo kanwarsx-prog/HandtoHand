@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import ProfilePhotoUpload from '@/components/ProfilePhotoUpload';
 
 export default function EditProfilePage() {
     const [loading, setLoading] = useState(true);
@@ -11,6 +12,8 @@ export default function EditProfilePage() {
     const [displayName, setDisplayName] = useState('');
     const [postcode, setPostcode] = useState('');
     const [bio, setBio] = useState('');
+    const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string>('');
     const router = useRouter();
     const supabase = createClient();
 
@@ -22,6 +25,8 @@ export default function EditProfilePage() {
                 return;
             }
 
+            setUserId(user.id);
+
             const { data: profile } = await supabase
                 .from('users')
                 .select('*')
@@ -32,6 +37,7 @@ export default function EditProfilePage() {
                 setDisplayName(profile.display_name || '');
                 setPostcode(profile.postcode_full || '');
                 setBio(profile.bio || '');
+                setProfilePhoto(profile.profile_photo || null);
             }
             setLoading(false);
         }
@@ -53,8 +59,7 @@ export default function EditProfilePage() {
                     displayName,
                     postcode,
                     bio,
-                    // We're not sending categories here yet, but the API handles partial updates for now
-                    // or we can add category selection here too
+                    profilePhoto,
                 }),
             });
 
@@ -94,6 +99,17 @@ export default function EditProfilePage() {
 
             <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <form id="profile-form" onSubmit={handleSubmit} className="space-y-6">
+
+                    {/* Profile Photo Upload */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="p-6">
+                            <ProfilePhotoUpload
+                                currentPhotoUrl={profilePhoto}
+                                userId={userId}
+                                onPhotoChange={setProfilePhoto}
+                            />
+                        </div>
+                    </div>
 
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="p-6 space-y-6">

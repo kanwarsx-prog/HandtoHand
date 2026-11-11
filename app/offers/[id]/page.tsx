@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import DeleteOfferButton from '@/components/DeleteOfferButton';
@@ -188,3 +188,4 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
         </div>
     );
 }
+

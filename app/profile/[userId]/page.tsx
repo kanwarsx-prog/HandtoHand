@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -198,3 +198,4 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         </div>
     );
 }
+
