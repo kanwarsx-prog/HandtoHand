@@ -74,7 +74,7 @@ export async function POST(request: Request) {
             await supabase.from('notifications').insert({
                 user_id: recipient,
                 type: 'MESSAGE',
-                title: `New message from ${user.user_metadata.display_name || 'Neighbor'}`,
+            title: `New message from ${(user as { name?: string }).name || 'Neighbor'}`,
                 message: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
                 link: `/messages/${conversation_id}`
             });

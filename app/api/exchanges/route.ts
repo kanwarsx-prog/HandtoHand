@@ -65,7 +65,7 @@ export async function POST(request: Request) {
             user_id: partner_id,
             type: 'EXCHANGE_PROPOSAL',
             title: 'New Exchange Proposal',
-            message: `${user.user_metadata.display_name || 'A neighbor'} proposed an exchange: ${offer_title || 'Item'} for ${wish_title || 'Item'}`,
+            message: `${(user as { name?: string }).name || 'A neighbor'} proposed an exchange: ${offer_title || 'Item'} for ${wish_title || 'Item'}`,
             link: '/messages' // Ideally link to specific chat but we don't have convo ID handy here easy. 
             // Better: Find convo ID or just link to /messages general
         });

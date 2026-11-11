@@ -2,6 +2,7 @@
 import { createServerClient } from '@/lib/neon/supabase-ssr-compat';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import OfferCard from '@/components/OfferCard';
 import SearchFilters from '@/components/SearchFilters';
 import NotificationBell from '@/components/NotificationBell';
@@ -30,6 +31,18 @@ export default async function Home({
   );
 
   const { data: { user } } = await supabase.auth.getUser();
+
+  let currentProfile: { display_name?: string | null; postcode_outward?: string | null } | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('display_name, postcode_outward')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!profile) redirect('/profile/setup');
+    currentProfile = profile;
+  }
 
   // Fetch offers with author and category info
   let query = supabase
@@ -79,7 +92,7 @@ export default async function Home({
       const matches = findOffersForWishes(
         wishes as any[],
         allOffers as any[],
-        user.user_metadata?.postcode_outward
+        currentProfile?.postcode_outward ?? undefined
       );
       recommendedOffers = matches.slice(0, 4).map(m => m.offer);
     }
@@ -112,7 +125,7 @@ export default async function Home({
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 animate-slide-up">
             <div>
               <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-800 leading-tight">
-                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{user.user_metadata?.display_name || 'Neighbor'}</span>! ðŸ‘‹
+                Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">{currentProfile?.display_name || (user as { name?: string }).name || 'Neighbor'}</span>! ðŸ‘‹
               </h1>
               <p className="text-lg text-slate-600 mt-2">
                 Here's what your community is sharing today.

@@ -65,7 +65,7 @@ export default async function ProfilePage() {
 
     // Placeholder for when no profile exists
     const displayProfile = profile || {
-        display_name: user.user_metadata?.display_name || 'User',
+        display_name: (user as { name?: string }).name || 'User',
         email: user.email,
         bio: '',
         postcode_outward: 'UNK',
